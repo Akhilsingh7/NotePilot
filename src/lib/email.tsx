@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { getEnv } from "./env";
+import { OtpEmail } from "@/helpers/resend-otp-template";
 
 const resend = new Resend(getEnv("RESEND_API_KEY"));
 
@@ -8,6 +9,6 @@ export async function sendOtpEmail(email: string, otp: string) {
     from: getEnv("EMAIL_FROM"),
     to: email,
     subject: "Your OTP Code",
-    html: `<p>Your OTP is <strong>${otp}</strong></p>`,
+    react: <OtpEmail otp={otp} />,
   });
 }
