@@ -7,9 +7,11 @@ export const nameValidation = z
   .max(20, "Username should not be more than 20 characters")
   .regex(/^[a-zA-Z0-9_]+$/, "Username must not contain special characters");
 
+export const emailValidation = z.string().trim().email().toLowerCase();
+
 export const signUpSchema = z.object({
   name: nameValidation,
-  email: z.string().trim().email("Invalid email address"),
+  email: emailValidation,
 
   password: z
     .string()
