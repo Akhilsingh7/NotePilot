@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
+import axios from "axios";
 
 type Props = {
   open: boolean;
@@ -19,9 +20,43 @@ type Props = {
 export function SignupModal({ open, onOpenChange }: Props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [password, setPassword] = useState("");
 
-  const sendDetailsForOtp = (e: any) => {
-    const nameOfInput = e.target.name;
+  const sendDetailsForOtp = async () => {
+    try {
+      const res = await axios.post("/api/auth/send-otp", {
+        email: email,
+      });
+      console.log("response", res.data);
+    } catch (err: any) {
+      console.log("error ", err.response.data);
+    }
+  };
+
+  const verifyOtp = async () => {
+    try {
+      const res = await axios.post("/api/auth/verify-otp", {
+        email: email,
+        otp: otp,
+      });
+      console.log("response", res.data);
+    } catch (err: any) {
+      console.log("error ", err.response.data);
+    }
+  };
+
+  const registerUser = async () => {
+    try {
+      const res = await axios.post("/api/auth/sign-up", {
+        name: name,
+        email: email,
+        password: password,
+      });
+      console.log("response", res.data);
+    } catch (err: any) {
+      console.log("error ", err.response.data);
+    }
   };
 
   return (
@@ -45,6 +80,7 @@ export function SignupModal({ open, onOpenChange }: Props) {
                 placeholder="Enter your name"
                 value={name}
                 name="username"
+                onChange={(e) => setName(e.target.value)}
               />
             </div>
 
@@ -55,26 +91,40 @@ export function SignupModal({ open, onOpenChange }: Props) {
                 placeholder="Enter your email"
                 value={email}
                 name="email"
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
             <div className="flex gap-2">
-              <Input placeholder="Enter OTP" />
-              <Button variant="outline" type="button">
+              <Input
+                placeholder="Enter OTP"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+              />
+              <Button
+                variant="outline"
+                type="button"
+                onClick={sendDetailsForOtp}
+              >
                 Send OTP
               </Button>
             </div>
 
-            <Button className="w-full" type="button">
+            <Button className="w-full" type="button" onClick={verifyOtp}>
               Verify OTP
             </Button>
 
             <div>
               <Label>Password</Label>
-              <Input type="password" placeholder="Enter password" />
+              <Input
+                type="password"
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
 
-            <Button className="w-full" disabled>
+            <Button type="button" className="w-full" onClick={registerUser}>
               Sign up
             </Button>
 
