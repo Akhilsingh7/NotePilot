@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import axios from "axios";
+import { signIn } from "next-auth/react";
 
 type Props = {
   open: boolean;
@@ -54,6 +55,15 @@ export function SignupModal({ open, onOpenChange }: Props) {
         password: password,
       });
       console.log("response", res.data);
+
+      if (res.data.success) {
+        await signIn("credentials", {
+          email: email,
+          password: password,
+          redirect: true,
+          callbackUrl: "/dashboard",
+        });
+      }
     } catch (err: any) {
       console.log("error ", err.response.data);
     }
