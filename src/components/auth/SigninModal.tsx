@@ -11,6 +11,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { FormEvent, useState } from "react";
+import axios from "axios";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 type Props = {
   open: boolean;
@@ -18,6 +22,26 @@ type Props = {
 };
 
 export function SigninModal({ open, onOpenChange }: Props) {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const signInUser = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const res = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+    console.log("login response", res?.ok);
+    console.log("login error", res?.error);
+    if (res?.ok) {
+      router.push("/dashboard");
+      onOpenChange(false);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md rounded-xl">
@@ -30,28 +54,44 @@ export function SigninModal({ open, onOpenChange }: Props) {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 mt-4">
-          <div>
-            <Label>Email</Label>
-            <Input type="text" placeholder="Enter your email" />
+        <form onSubmit={signInUser}>
+          <div className="space-y-4 mt-4">
+            <div>
+              <Label>Email</Label>
+              <Input
+                type="text"
+                placeholder="Enter your email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <Label>Password</Label>
+              <Input
+                type="password"
+                placeholder="Enter password"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+
+            <div className="flex items-center gap-2 text-sm">
+              <Checkbox />
+              <span>Remember me</span>
+            </div>
+
+            <Button type="submit" className="w-full">
+              Sign in
+            </Button>
+
+            <p className="text-center text-sm text-gray-500">
+              No account? Create one
+            </p>
           </div>
-
-          <div>
-            <Label>Password</Label>
-            <Input type="password" placeholder="Enter password" />
-          </div>
-
-          <div className="flex items-center gap-2 text-sm">
-            <Checkbox />
-            <span>Remember me</span>
-          </div>
-
-          <Button className="w-full">Sign in</Button>
-
-          <p className="text-center text-sm text-gray-500">
-            No account? Create one
-          </p>
-        </div>
+        </form>
       </DialogContent>
     </Dialog>
   );

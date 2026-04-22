@@ -1,17 +1,15 @@
-"use client";
+// "use client";
 
-import { useState } from "react";
+// import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { SignupModal } from "@/components/auth/SignupModal";
-import { SigninModal } from "@/components/auth/SigninModal";
 
 export default function Home() {
-  const [openSignup, setOpenSignup] = useState(false);
-  const [openSignin, setOpenSignin] = useState(false);
+  // const [openSignup, setOpenSignup] = useState(false);
+  // const [openSignin, setOpenSignin] = useState(false);
 
   return (
     <main className="min-h-screen bg-[#F7F4ED] text-black">
-      <nav className="flex items-center justify-between px-10 py-4 border-b">
+      {/* <nav className="flex items-center justify-between px-10 py-4 border-b">
         <h1 className="text-2xl font-semibold">Notepilot</h1>
 
         <div className="flex items-center gap-6 text-sm">
@@ -27,7 +25,7 @@ export default function Home() {
             Get started
           </Button>
         </div>
-      </nav>
+      </nav> */}
 
       <section className="flex items-center justify-between px-16 py-20">
         <div className="max-w-xl">
@@ -39,10 +37,7 @@ export default function Home() {
             A place to read, write, and deepen your understanding
           </p>
 
-          <Button
-            className="mt-6 rounded-full px-6 py-3 text-lg"
-            onClick={() => setOpenSignup(true)}
-          >
+          <Button className="mt-6 rounded-full px-6 py-3 text-lg">
             Start reading
           </Button>
         </div>
@@ -50,8 +45,8 @@ export default function Home() {
         <div className="w-100 h-100 bg-green-500 rounded-md hidden md:block" />
       </section>
 
-      <SignupModal open={openSignup} onOpenChange={setOpenSignup} />
-      <SigninModal open={openSignin} onOpenChange={setOpenSignin} />
+      {/* <SignupModal open={openSignup} onOpenChange={setOpenSignup} />
+      <SigninModal open={openSignin} onOpenChange={setOpenSignin} /> */}
     </main>
   );
 }
