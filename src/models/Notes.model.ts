@@ -27,7 +27,7 @@ const NoteSchema: Schema<Note> = new Schema(
     },
 
     content: {
-      type: String,
+      type: Schema.Types.Mixed,
       required: true,
     },
 
