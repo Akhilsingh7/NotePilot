@@ -3,7 +3,6 @@ import { errorResponse, successResponse } from "@/lib/response";
 import NotesModel from "@/models/Notes.model";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/option";
-import { Suspense } from "react";
 
 export async function GET(
   request: Request,
@@ -29,7 +28,7 @@ export async function GET(
       return errorResponse("Note not found", 404);
     }
 
-    return successResponse("Note fetched successfully", note, 200);
+    return successResponse(note, "Note fetched successfully", 200);
   } catch (error: any) {
     console.log("Error in getting particular note:", error);
 
@@ -68,7 +67,7 @@ export async function PUT(
       return errorResponse("Note not found or not authorized", 404);
     }
 
-    return successResponse("Note updated successfully", updatedNote, 200);
+    return successResponse(updatedNote, "Note updated successfully", 200);
   } catch (error: any) {
     console.log("Error in updating note:", error);
 
@@ -100,7 +99,7 @@ export async function DELETE(
       return errorResponse("Note not found or not authorized", 404);
     }
 
-    return successResponse("Note deleted successfully", deletedNote, 200);
+    return successResponse(deletedNote, "Note deleted successfully", 200);
   } catch (error: any) {
     console.log("Error in deleting note:", error);
 
