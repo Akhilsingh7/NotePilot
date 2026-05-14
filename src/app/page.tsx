@@ -1,11 +1,20 @@
-// "use client";
+"use client";
 
 // import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   // const [openSignup, setOpenSignup] = useState(false);
   // const [openSignin, setOpenSignin] = useState(false);
+
+  // const { data: session, status } = useSession();
+
+  // console.log("data for session", session);
+  // console.log("status for session", status);
+
+  const router = useRouter();
 
   return (
     <main className="min-h-screen bg-[#F7F4ED] text-black">
@@ -36,8 +45,19 @@ export default function Home() {
           <p className="mt-6 text-lg text-gray-700">
             A place to read, write, and deepen your understanding
           </p>
-
-          <Button className="mt-6 rounded-full px-6 py-3 text-lg">
+          <Button
+            className="
+            mt-6 rounded-full px-6 py-3 text-lg
+            bg-black text-white
+            transition-all duration-200
+            hover:bg-gray-800
+            hover:scale-105
+            active:scale-95
+            cursor-pointer
+            shadow-md hover:shadow-lg
+          "
+            onClick={() => router.push("/explore")}
+          >
             Start reading
           </Button>
         </div>

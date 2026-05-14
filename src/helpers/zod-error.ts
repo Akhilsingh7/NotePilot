@@ -3,7 +3,7 @@ export function formatZodErrors(issues: any[]) {
 
   for (const issue of issues) {
     const field = issue.path[0];
-    if (field) {
+    if (field && !errors[field]) {
       errors[field] = issue.message;
     }
   }

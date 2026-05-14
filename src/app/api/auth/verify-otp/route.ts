@@ -5,17 +5,22 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    const { otp, email } = body;
+    const email = body.email?.toLowerCase().trim();
+    const otp = body.otp;
+
+    if (!email || !otp) {
+      return errorResponse("Email and OTP are required", 400);
+    }
 
     const redisClient = await getRedis();
 
     const storedOtp = await redisClient.get(`otp:${email}`);
 
     if (!storedOtp) {
-      return errorResponse("OTP expired or not found", 400);
+      return errorResponse("OTP expired. Please request a new one", 400);
     }
 
-    if (otp !== storedOtp) {
+    if (String(otp) !== String(storedOtp)) {
       return errorResponse("Invalid OTP", 400);
     }
 

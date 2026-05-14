@@ -41,7 +41,7 @@ export async function POST(request: Request) {
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    await redisClient.set(`otp:${email}`, otp, { EX: 300 });
+    await redisClient.set(`otp:${email}`, otp, { EX: 60 });
 
     await redisClient.del(`verified:${email}`);
 
