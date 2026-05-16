@@ -16,7 +16,7 @@ export async function POST(request: Request) {
 
     const body = await request.json();
 
-    if (!body.title || !body.content) {
+    if (!body.title.trim() || !body.content) {
       return errorResponse("Title and content are required", 400);
     }
 

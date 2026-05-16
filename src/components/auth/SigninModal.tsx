@@ -15,6 +15,7 @@ import { FormEvent, useState } from "react";
 import axios from "axios";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 type Props = {
   open: boolean;
@@ -34,11 +35,17 @@ export function SigninModal({ open, onOpenChange }: Props) {
       password,
       redirect: false,
     });
+    console.log("login value is", res);
     console.log("login response", res?.ok);
     console.log("login error", res?.error);
     if (res?.ok) {
+      toast.success("Log In successfull");
       router.push("/dashboard");
       onOpenChange(false);
+    }
+
+    if (res?.error) {
+      toast.error("Invalid email or password");
     }
   };
 
