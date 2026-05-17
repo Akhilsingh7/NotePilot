@@ -16,6 +16,7 @@ import axios from "axios";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { Loader } from "../ui/loader";
 
 type Props = {
   open: boolean;
@@ -26,26 +27,45 @@ export function SigninModal({ open, onOpenChange }: Props) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const signInUser = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const res = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
-    console.log("login value is", res);
-    console.log("login response", res?.ok);
-    console.log("login error", res?.error);
-    if (res?.ok) {
-      toast.success("Log In successfull");
-      router.push("/dashboard");
-      onOpenChange(false);
-    }
+    if (loading) return;
 
-    if (res?.error) {
-      toast.error("Invalid email or password");
+    if (!email.trim() || !password.trim()) {
+      toast.error("Email and password are required");
+      return;
+    }
+    try {
+      setLoading(true);
+
+      const res = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      console.log("login value is", res);
+      console.log("login response", res?.ok);
+      console.log("login error", res?.error);
+
+      if (res?.error) {
+        toast.error("Invalid email or password");
+        return;
+      }
+
+      if (res?.ok) {
+        toast.success("Log In successfull");
+        router.push("/dashboard");
+        onOpenChange(false);
+      }
+    } catch (err: any) {
+      console.log("error:", err);
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -70,6 +90,7 @@ export function SigninModal({ open, onOpenChange }: Props) {
                 placeholder="Enter your email"
                 name="email"
                 value={email}
+                disabled={loading}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
@@ -81,6 +102,7 @@ export function SigninModal({ open, onOpenChange }: Props) {
                 placeholder="Enter password"
                 name="password"
                 value={password}
+                disabled={loading}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
@@ -90,8 +112,14 @@ export function SigninModal({ open, onOpenChange }: Props) {
               <span>Remember me</span>
             </div>
 
-            <Button type="submit" className="w-full">
-              Sign in
+            <Button type="submit" className="w-full " disabled={loading}>
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <Loader text="Signing in..." direction="row" />
+                </span>
+              ) : (
+                "Sign in"
+              )}
             </Button>
 
             <p className="text-center text-sm text-gray-500">

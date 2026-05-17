@@ -1,63 +1,77 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { SignupModal } from "@/components/auth/SignupModal";
-import { SigninModal } from "@/components/auth/SigninModal";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 
-function Navbar() {
+import { Button } from "@/components/ui/button";
+import { SignupModal } from "../auth/SignupModal";
+import { SigninModal } from "../auth/SigninModal";
+import { useState } from "react";
+
+export default function Navbar() {
+  const router = useRouter();
+  const { data: session } = useSession();
+
   const [openSignup, setOpenSignup] = useState(false);
   const [openSignin, setOpenSignin] = useState(false);
 
-  const router = useRouter();
-
-  const { data: session, status } = useSession();
-
   return (
-    <nav className="flex items-center justify-between px-10 py-4 border-b">
-      <button onClick={() => router.push("/")}>
-        <h1 className="text-2xl font-semibold">Notepilot</h1>
-      </button>
+    <header className="border-b bg-white">
+      <nav className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
+        <Link href="/" className="text-3xl font-semibold">
+          Notepilot
+        </Link>
 
-      <div className="flex items-center gap-6 text-sm">
-        <span className="cursor-pointer">Our story</span>
-        <span className="cursor-pointer">Explore</span>
-        <span className="cursor-pointer">Write</span>
+        <div className="flex items-center  text-md font-medium">
+          {/* <Link href="/our-story" className="hover:text-gray-600 transition">
+            Our story
+          </Link> */}
 
-        {!session ? (
-          <div>
-            <span
-              className="cursor-pointer"
-              onClick={() => setOpenSignin(true)}
-            >
-              Sign in
-            </span>
+          <Link href="/explore" className="hover:text-gray-600 transition">
+            Explore
+          </Link>
 
-            <Button
-              className="rounded-full"
-              onClick={() => setOpenSignup(true)}
-            >
-              Get started
-            </Button>
-          </div>
-        ) : (
-          <div>
-            <Button
-              className="rounded-full"
-              onClick={() => signOut({ callbackUrl: "/" })}
-            >
-              LogOut
-            </Button>
-          </div>
-        )}
-      </div>
+          {!session ? (
+            <div className="flex items-center gap-4 ml-4">
+              <button
+                onClick={() => setOpenSignin(true)}
+                className="hover:text-gray-600 transition"
+              >
+                Sign in
+              </button>
+
+              <Button
+                className="rounded-full"
+                onClick={() => setOpenSignup(true)}
+              >
+                Get started
+              </Button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-4 ml-4">
+              <Link href="/write" className="hover:text-gray-600 transition">
+                Write
+              </Link>
+
+              <Link href="/dashboard" className="hover:text-gray-600">
+                Dashboard
+              </Link>
+
+              <Button
+                variant="outline"
+                className="rounded-full"
+                onClick={() => signOut({ callbackUrl: "/" })}
+              >
+                Logout
+              </Button>
+            </div>
+          )}
+        </div>
+      </nav>
 
       <SignupModal open={openSignup} onOpenChange={setOpenSignup} />
       <SigninModal open={openSignin} onOpenChange={setOpenSignin} />
-    </nav>
+    </header>
   );
 }
-
-export default Navbar;
