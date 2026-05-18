@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface Note extends Document {
+  authorName: string;
   userId: string;
   title: string;
   content: string;
@@ -14,6 +15,11 @@ export interface Note extends Document {
 
 const NoteSchema: Schema<Note> = new Schema(
   {
+    authorName: {
+      type: String,
+      required: true,
+      index: true,
+    },
     userId: {
       type: String,
       required: true,

@@ -21,6 +21,7 @@ export async function POST(request: Request) {
     }
 
     const newNote = await NotesModel.create({
+      authorName: session.user.name,
       userId: session.user.id,
       title: body.title,
       content: body.content,
