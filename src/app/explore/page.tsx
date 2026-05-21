@@ -6,6 +6,7 @@ import { getPreviewText } from "@/helpers/getPreviewText";
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Heart } from "lucide-react";
 
 type Note = {
   authorName: string;
@@ -13,6 +14,7 @@ type Note = {
   title: string;
   content: any[];
   createdAt: string;
+  likesCount: number;
 };
 
 function Explore() {
@@ -37,11 +39,13 @@ function Explore() {
     fetchPublicNotes();
   }, []);
 
+  // const increaseLikes
+
   return (
     <main className="min-h-screen bg-[#fdfdfc]">
       <section className="border-b bg-[#f7f4ed]">
-        <div className="max-w-6xl mx-auto px-6 py-20">
-          <h1 className="text-6xl font-serif leading-tight max-w-3xl">
+        <div className="max-w-6xl mx-auto px-6 py-10">
+          <h1 className="text-5xl font-serif leading-tight max-w-3xl">
             Explore ideas, stories & knowledge
           </h1>
 
@@ -74,7 +78,7 @@ function Explore() {
           ) : (
             notes.map((note) => (
               <Link key={note._id} href={`/explore/${note._id}`}>
-                <article className="flex gap-8 py-8 border-b cursor-pointer hover:opacity-85 transition-opacity">
+                <article className="flex gap-8 py-2 border-b cursor-pointer hover:opacity-85 transition-opacity">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <div className="w-6 h-6 rounded-full bg-stone-300 flex items-center justify-center text-xs font-semibold text-white">
@@ -90,10 +94,29 @@ function Explore() {
                     <p className="text-sm text-gray-500 line-clamp-2">
                       {getPreviewText(note.content)}
                     </p>
-                    <div className="flex items-center gap-2 mt-3 text-xs text-gray-400">
-                      <span>{new Date(note.createdAt).toDateString()}</span>
-                      <span>•</span>
-                      <span>5 min read</span>
+                    <div className="flex items-center justify-between mt-4">
+                      <div className="flex items-center gap-2 text- text-gray-400">
+                        <span>
+                          {new Date(note.createdAt).toLocaleDateString(
+                            "en-US",
+                            {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            }
+                          )}
+                        </span>
+
+                        <span>•</span>
+
+                        <span>Public</span>
+                      </div>
+
+                      <button className="flex items-center gap-1 text-gray-500 transition-colors ">
+                        <Heart className="h-4 w-4 hover:fill-black" />
+
+                        <span className="text-sm">{note.likesCount}</span>
+                      </button>
                     </div>
                   </div>
                 </article>
