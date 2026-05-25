@@ -37,12 +37,24 @@ export async function POST(
         noteId,
       });
 
-      await NotesModel.findByIdAndUpdate(noteId, {
-        $inc: { likesCount: -1 },
-      });
+      const updatedNote = await NotesModel.findByIdAndUpdate(
+        noteId,
+        {
+          $inc: { likesCount: -1 },
+        },
+        { new: true }
+      );
+
+      if (!updatedNote) {
+        return errorResponse("Note not found", 404);
+      }
 
       return successResponse(
-        { liked: false },
+        {
+          liked: false,
+          noteId: updatedNote._id,
+          likesCount: updatedNote.likesCount,
+        },
         "Note unliked successfully",
         200
       );
@@ -53,11 +65,27 @@ export async function POST(
       noteId,
     });
 
-    await NotesModel.findByIdAndUpdate(noteId, {
-      $inc: { likesCount: 1 },
-    });
+    const updatedNote = await NotesModel.findByIdAndUpdate(
+      noteId,
+      {
+        $inc: { likesCount: 1 },
+      },
+      { new: true }
+    );
 
-    return successResponse({ liked: true }, "Note liked successfully", 200);
+    if (!updatedNote) {
+      return errorResponse("Note not found", 404);
+    }
+
+    return successResponse(
+      {
+        liked: true,
+        noteId: updatedNote._id,
+        likesCount: updatedNote.likesCount,
+      },
+      "Note liked successfully",
+      200
+    );
   } catch (error: any) {
     console.log("Error in liking note:", error);
 
