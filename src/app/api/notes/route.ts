@@ -52,7 +52,7 @@ export async function GET(request: Request) {
 
     const userId = session.user.id;
 
-    const allNotes = await NotesModel.findById({ userId });
+    const allNotes = await NotesModel.find({ userId });
 
     if (allNotes.length == 0) {
       return errorResponse(
