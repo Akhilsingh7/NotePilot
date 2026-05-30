@@ -1,37 +1,31 @@
 import { getPreviewText } from "@/helpers/getPreviewText";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { addLikeNote, removeLikeNote } from "@/redux/slices/likesSlice";
+import { Note } from "@/types/Note";
 import axios from "axios";
 import { Heart } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 
-type Note = {
-  authorName: string;
-  _id: string;
-  title: string;
-  content: any[];
-  createdAt: string;
-  likesCount: number;
-  isPublic?: boolean;
-};
-
 type NoteCardProps = {
   note: Note;
 
+  onLikeUpdate?: (noteId: string, likesCount: number) => void;
   // showPrivateBadge?: boolean;
-
   // showActions?: boolean;
 };
 
 function NoteCard({
   note,
+  onLikeUpdate,
   // showPrivateBadge = false,
   // showActions = true,
 }: NoteCardProps) {
   const { data: session } = useSession();
   const likedNoteIds = useAppSelector((state) => state.likes.likedNoteIds);
 
+  const dispatch = useAppDispatch();
   const updateLike = async (noteId: any) => {
     try {
       if (!session) {
@@ -39,9 +33,21 @@ function NoteCard({
         return;
       }
 
+      console.log("clicked noteId", note._id);
       const res = await axios.post(`/api/likes/${noteId}`);
 
+      console.log("response is ", res?.data);
+
       if (res?.data?.success) {
+        const data = res.data.data;
+
+        if (data.liked) {
+          dispatch(addLikeNote(noteId));
+        } else {
+          dispatch(removeLikeNote(noteId));
+        }
+
+        onLikeUpdate?.(data.noteId, data.likesCount);
       }
     } catch {
       console.log("error in liking/unliking note");
@@ -81,7 +87,11 @@ function NoteCard({
 
             <button
               className="flex items-center gap-1 text-gray-500 transition-colors "
-              onClick={() => updateLike(note._id)}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                updateLike(note._id);
+              }}
             >
               <Heart
                 className={`h-4 w-4 transition-all ${

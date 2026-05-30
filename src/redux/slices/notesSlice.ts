@@ -23,19 +23,25 @@ const initialState: NoteState = {
 const noteSlice = createSlice({
   name: "notes",
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    editLikeCount: (state, action) => {
+      state.notes = state.notes.map((note) =>
+        note._id === action.payload.noteId
+          ? { ...note, likesCount: action.payload.likesCount }
+          : note
+      );
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchNotes.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-
       .addCase(fetchNotes.fulfilled, (state, action) => {
         state.loading = false;
         state.notes = action.payload;
       })
-
       .addCase(fetchNotes.rejected, (state) => {
         state.loading = false;
         state.error = "Failed fetching notes";
@@ -43,4 +49,5 @@ const noteSlice = createSlice({
   },
 });
 
+export const { editLikeCount } = noteSlice.actions;
 export default noteSlice.reducer;

@@ -20,7 +20,7 @@ export async function POST(
       return errorResponse("Unauthorized user", 401);
     }
 
-    const noteId = params.noteId;
+    const { noteId } = await params;
 
     if (!mongoose.Types.ObjectId.isValid(noteId)) {
       return errorResponse("Invalid note id", 400);

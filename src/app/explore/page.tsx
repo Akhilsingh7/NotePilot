@@ -1,26 +1,13 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { getPreviewText } from "@/helpers/getPreviewText";
 import axios from "axios";
-import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Heart } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setLikedNotes } from "@/redux/slices/likesSlice";
 import NoteCard from "@/components/notes/NoteCard";
 import NoteCardSkeleton from "@/components/notes/NoteCardSkeleton";
-
-type Note = {
-  authorName: string;
-  _id: string;
-  title: string;
-  content: any[];
-  createdAt: string;
-  likesCount: number;
-};
+import { Note } from "@/types/Note";
 
 function Explore() {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -30,12 +17,18 @@ function Explore() {
 
   const { data: session } = useSession();
 
+  const updateNoteLikeCount = (noteId: string, likesCount: number) => {
+    setNotes((prev) =>
+      prev.map((note) => (note._id == noteId ? { ...note, likesCount } : note))
+    );
+  };
+
   useEffect(() => {
     const fetchPublicNotes = async () => {
       try {
         const res = await axios.get("/api/public-notes");
 
-        console.log("notes are", res.data.data);
+        console.log("public notes are", res.data.data);
 
         setNotes(res.data.data);
       } catch (error) {
@@ -94,7 +87,13 @@ function Explore() {
               No public notes found.
             </div>
           ) : (
-            notes.map((note) => <NoteCard note={note} key={note._id} />)
+            notes.map((note) => (
+              <NoteCard
+                note={note}
+                key={note._id}
+                onLikeUpdate={updateNoteLikeCount}
+              />
+            ))
           )}
         </div>
       </section>
