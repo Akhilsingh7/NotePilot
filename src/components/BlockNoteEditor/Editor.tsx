@@ -5,7 +5,6 @@ import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/mantine";
 import { SuggestionMenuController } from "@blocknote/react";
 import "@blocknote/mantine/style.css";
-
 import { useState } from "react";
 import { schema } from "./CustomSchema";
 import { getCustomSlashMenuItems } from "./CustomSlash";
@@ -13,6 +12,8 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { Button } from "../ui/button";
+import NoteEditor from "./NoteEditor";
 
 export default function BlockEditor() {
   const editor = useCreateBlockNote({ schema });
@@ -88,26 +89,10 @@ export default function BlockEditor() {
       </div>
 
       <div className="bg-white p-6 rounded-xl shadow-sm">
-        <BlockNoteView
-          editor={editor}
-          formattingToolbar={false}
-          slashMenu={false}
-          onChange={() => {
-            console.log({ title, content: editor.document });
-          }}
-        >
-          <SuggestionMenuController
-            triggerCharacter="/"
-            getItems={async (query) =>
-              getCustomSlashMenuItems(editor).filter((item) =>
-                item.title.toLowerCase().includes(query.toLowerCase())
-              )
-            }
-          />
-        </BlockNoteView>
+        <NoteEditor editor={editor} editable={!loading} />
       </div>
       <div>
-        <button
+        <Button
           disabled={loading}
           onClick={createNewNoteHandler}
           className={`px-4 py-2 rounded mt-4 ${
@@ -115,7 +100,7 @@ export default function BlockEditor() {
           }`}
         >
           {loading ? "Saving..." : "Add Note"}
-        </button>
+        </Button>
       </div>
     </div>
   );

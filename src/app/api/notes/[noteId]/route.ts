@@ -6,7 +6,7 @@ import { authOptions } from "../../auth/[...nextauth]/option";
 
 export async function GET(
   request: Request,
-  { params }: { params: { noteId: string } }
+  { params }: { params: Promise<{ noteId: string }> }
 ) {
   try {
     await dbConnect();
@@ -17,7 +17,7 @@ export async function GET(
       return errorResponse("Unauthorized user", 401);
     }
 
-    const noteId = params.noteId;
+    const { noteId } = await params;
 
     const note = await NotesModel.findOne({
       _id: noteId,
@@ -49,7 +49,7 @@ export async function PUT(
       return errorResponse("Unauthorized user", 401);
     }
 
-    const noteId = params.noteId;
+    const { noteId } = await params;
 
     const body = await req.json();
 

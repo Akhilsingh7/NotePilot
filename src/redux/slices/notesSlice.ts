@@ -31,6 +31,14 @@ const noteSlice = createSlice({
           : note
       );
     },
+    updateNote: (state, action) => {
+      state.notes = state.notes.map((note) =>
+        note._id === action.payload._id ? action.payload : note
+      );
+    },
+    deleteNote: (state, action) => {
+      state.notes = state.notes.filter((note) => note._id !== action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -49,5 +57,5 @@ const noteSlice = createSlice({
   },
 });
 
-export const { editLikeCount } = noteSlice.actions;
+export const { editLikeCount, updateNote, deleteNote } = noteSlice.actions;
 export default noteSlice.reducer;

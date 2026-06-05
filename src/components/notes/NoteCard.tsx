@@ -55,7 +55,7 @@ function NoteCard({
   };
 
   return (
-    <Link key={note._id} href={`/explore/${note._id}`}>
+    <Link key={note._id} href={`/notes/${note._id}`}>
       <article className="flex gap-8 py-2 border-b cursor-pointer hover:opacity-85 transition-opacity">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
