@@ -88,7 +88,7 @@ export async function DELETE(
       return errorResponse("Unauthorized user", 401);
     }
 
-    const noteId = params.noteId;
+    const { noteId } = await params;
 
     const deletedNote = await NotesModel.findOneAndDelete({
       _id: noteId,

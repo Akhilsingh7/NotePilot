@@ -5,19 +5,26 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setLikedNotes } from "@/redux/slices/likesSlice";
-import NoteCard from "@/components/notes/NoteCard";
+import NoteCard from "@/components/notes/ExploreNoteCard";
 import NoteCardSkeleton from "@/components/notes/NoteCardSkeleton";
 import { Note } from "@/types/Note";
+import ExploreNoteCard from "@/components/notes/ExploreNoteCard";
+import { runInThisContext } from "vm";
 
 function Explore() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const likedNoteIds = useAppSelector((state) => state.likes.likedNoteIds);
 
   const dispatch = useAppDispatch();
 
   const { data: session } = useSession();
 
   const updateNoteLikeCount = (noteId: string, likesCount: number) => {
+    if (!session) {
+      return;
+    }
     setNotes((prev) =>
       prev.map((note) => (note._id == noteId ? { ...note, likesCount } : note))
     );
@@ -41,23 +48,23 @@ function Explore() {
     fetchPublicNotes();
   }, []);
 
-  useEffect(() => {
-    const fetchLikedNotes = async () => {
-      if (!session) return;
+  // useEffect(() => {
+  //   const fetchLikedNotes = async () => {
+  //     if (!session) return;
 
-      try {
-        const res = await axios.get("/api/likes");
+  //     try {
+  //       const res = await axios.get("/api/likes");
 
-        if (res.data.success) {
-          dispatch(setLikedNotes(res.data.data));
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  //       if (res.data.success) {
+  //         dispatch(setLikedNotes(res.data.data));
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
 
-    fetchLikedNotes();
-  }, [session]);
+  //   fetchLikedNotes();
+  // }, [session]);
 
   return (
     <main className="min-h-screen bg-[#fdfdfc]">
@@ -88,7 +95,7 @@ function Explore() {
             </div>
           ) : (
             notes.map((note) => (
-              <NoteCard
+              <ExploreNoteCard
                 note={note}
                 key={note._id}
                 onLikeUpdate={updateNoteLikeCount}

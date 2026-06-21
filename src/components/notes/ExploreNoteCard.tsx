@@ -7,16 +7,17 @@ import { Heart } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { useNoteActions } from "./useNoteAction";
+useNoteActions;
 
 type NoteCardProps = {
   note: Note;
-
   onLikeUpdate?: (noteId: string, likesCount: number) => void;
   // showPrivateBadge?: boolean;
   // showActions?: boolean;
 };
 
-function NoteCard({
+function ExploreNoteCard({
   note,
   onLikeUpdate,
   // showPrivateBadge = false,
@@ -26,33 +27,34 @@ function NoteCard({
   const likedNoteIds = useAppSelector((state) => state.likes.likedNoteIds);
 
   const dispatch = useAppDispatch();
-  const updateLike = async (noteId: any) => {
-    try {
-      if (!session) {
-        toast.error("Please login to like");
-        return;
-      }
+  const { toggleLike } = useNoteActions();
+  // const updateLike = async (noteId: any) => {
+  //   try {
+  //     if (!session) {
+  //       toast.error("Please login to like");
+  //       return;
+  //     }
 
-      console.log("clicked noteId", note._id);
-      const res = await axios.post(`/api/likes/${noteId}`);
+  //     console.log("clicked noteId", note._id);
+  //     const res = await axios.post(`/api/likes/${noteId}`);
 
-      console.log("response is ", res?.data);
+  //     console.log("response is ", res?.data);
 
-      if (res?.data?.success) {
-        const data = res.data.data;
+  //     if (res?.data?.success) {
+  //       const data = res.data.data;
 
-        if (data.liked) {
-          dispatch(addLikeNote(noteId));
-        } else {
-          dispatch(removeLikeNote(noteId));
-        }
+  //       if (data.liked) {
+  //         dispatch(addLikeNote(noteId));
+  //       } else {
+  //         dispatch(removeLikeNote(noteId));
+  //       }
 
-        onLikeUpdate?.(data.noteId, data.likesCount);
-      }
-    } catch {
-      console.log("error in liking/unliking note");
-    }
-  };
+  //       onLikeUpdate?.(data.noteId, data.likesCount);
+  //     }
+  //   } catch {
+  //     console.log("error in liking/unliking note");
+  //   }
+  // };
 
   return (
     <Link key={note._id} href={`/notes/${note._id}`}>
@@ -68,7 +70,7 @@ function NoteCard({
             {note.title}
           </h2>
           <p className="text-sm text-gray-500 line-clamp-2">
-            {getPreviewText(note.content)}
+            {getPreviewText(note.content)} <span>...</span>
           </p>
           <div className="flex items-center justify-between mt-4">
             <div className="flex items-center gap-2 text- text-gray-400">
@@ -90,7 +92,7 @@ function NoteCard({
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                updateLike(note._id);
+                toggleLike(note._id, onLikeUpdate);
               }}
             >
               <Heart
@@ -110,4 +112,4 @@ function NoteCard({
   );
 }
 
-export default NoteCard;
+export default ExploreNoteCard;

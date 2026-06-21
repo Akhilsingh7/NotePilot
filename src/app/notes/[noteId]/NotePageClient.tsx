@@ -1,7 +1,6 @@
 "use client";
 
 import NoteEditor from "@/components/BlockNoteEditor/NoteEditor";
-import NoteViewer from "@/components/BlockNoteEditor/NoteViewer";
 import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/ui/loader";
 import { useCreateBlockNote } from "@blocknote/react";
@@ -10,12 +9,22 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { schema } from "../../../components/BlockNoteEditor/CustomSchema";
-import { is } from "zod/v4/locales";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { deleteNote, updateNote } from "@/redux/slices/notesSlice";
+import { Note } from "@/types/Note";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
   const [note, setNote] = useState<any>(null);
@@ -27,9 +36,6 @@ function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
   const [isPublic, setIsPublic] = useState(false);
   const { noteId } = use(params);
   const route = useRouter();
-
-  const loggedInUserNotes = useAppSelector((state) => state.notes.notes);
-
   const dispatch = useAppDispatch();
 
   const { data: session } = useSession();
@@ -93,12 +99,6 @@ function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
 
   const deleteNoteHandler = async () => {
     try {
-      const confirmed = window.confirm(
-        "Are you sure you want to delete this note?"
-      );
-
-      if (!confirmed) return;
-
       const res = await axios.delete(`/api/notes/${noteId}`);
 
       if (res.data.success) {
@@ -123,7 +123,7 @@ function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
   }
 
   return (
-    <>
+    <AlertDialog>
       <main className="max-w-4xl mx-auto px-6 py-10">
         {isOwner && (
           <div className="flex justify-end gap-2 mb-6">
@@ -131,16 +131,14 @@ function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
               <>
                 <Button onClick={() => setIsEditable(true)}>Edit</Button>
 
-                <Button variant="destructive" onClick={deleteNoteHandler}>
-                  Delete
-                </Button>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive">Delete</Button>
+                </AlertDialogTrigger>
               </>
             )}
 
             {isOwner && isEditable && (
               <>
-                <Button onClick={editNotesHandler}>Save</Button>
-
                 <Button
                   variant="outline"
                   onClick={() => {
@@ -197,7 +195,24 @@ function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
           <Button onClick={() => editNotesHandler()}>Save</Button>
         )}
       </main>
-    </>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Delete Note?</AlertDialogTitle>
+
+          <AlertDialogDescription>
+            This action cannot be undone. The note will be permanently deleted.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+          <AlertDialogAction onClick={deleteNoteHandler}>
+            Delete
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 
