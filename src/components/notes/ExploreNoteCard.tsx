@@ -28,33 +28,6 @@ function ExploreNoteCard({
 
   const dispatch = useAppDispatch();
   const { toggleLike } = useNoteActions();
-  // const updateLike = async (noteId: any) => {
-  //   try {
-  //     if (!session) {
-  //       toast.error("Please login to like");
-  //       return;
-  //     }
-
-  //     console.log("clicked noteId", note._id);
-  //     const res = await axios.post(`/api/likes/${noteId}`);
-
-  //     console.log("response is ", res?.data);
-
-  //     if (res?.data?.success) {
-  //       const data = res.data.data;
-
-  //       if (data.liked) {
-  //         dispatch(addLikeNote(noteId));
-  //       } else {
-  //         dispatch(removeLikeNote(noteId));
-  //       }
-
-  //       onLikeUpdate?.(data.noteId, data.likesCount);
-  //     }
-  //   } catch {
-  //     console.log("error in liking/unliking note");
-  //   }
-  // };
 
   return (
     <Link key={note._id} href={`/notes/${note._id}`}>
@@ -102,7 +75,6 @@ function ExploreNoteCard({
                     : "text-gray-500"
                 }`}
               />
-
               <span className="text-sm">{note.likesCount}</span>
             </button>
           </div>

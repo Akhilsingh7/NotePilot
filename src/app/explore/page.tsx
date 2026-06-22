@@ -48,24 +48,6 @@ function Explore() {
     fetchPublicNotes();
   }, []);
 
-  // useEffect(() => {
-  //   const fetchLikedNotes = async () => {
-  //     if (!session) return;
-
-  //     try {
-  //       const res = await axios.get("/api/likes");
-
-  //       if (res.data.success) {
-  //         dispatch(setLikedNotes(res.data.data));
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-
-  //   fetchLikedNotes();
-  // }, [session]);
-
   return (
     <main className="min-h-screen bg-[#fdfdfc]">
       <section className="border-b bg-[#f7f4ed]">

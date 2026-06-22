@@ -11,6 +11,7 @@ import {
   List,
   FileText,
 } from "lucide-react";
+import { useEffect } from "react";
 
 const likedNotes = [
   {
@@ -67,11 +68,17 @@ function Section({ title, icon, notes, maxItems = 3 }: SectionProps) {
         <button className="text-zinc-400 hover:text-white">See all</button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-        {notes.slice(0, maxItems).map((note) => (
-          <DashboardNoteCard key={note.id} note={note} />
-        ))}
-      </div>
+      {notes.length >= 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+          {notes.slice(0, maxItems).map((note) => (
+            <DashboardNoteCard key={note.id} note={note} />
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-xl border border-dashed border-zinc-700 p-10 text-center">
+          No notes found
+        </div>
+      )}
     </section>
   );
 }
@@ -83,10 +90,14 @@ export default function DashboardPage() {
 
   // const likedNote  = loggedInUserNotes.filter((note)=>note._id ==likeNoteIds)
 
+  // useEffect(()=>{
+
+  // })
+
   const sections = [
     {
       title: "My Notes",
-      data: loggedInUserNotes,
+      notes: loggedInUserNotes,
       href: "/",
     },
     // {
@@ -140,7 +151,7 @@ export default function DashboardPage() {
             <Section
               title={section.title}
               icon={<span className="h-5 w-5 text-pink-500">⭐</span>}
-              notes={section.data}
+              notes={section.notes}
               href={section.href}
             />
           ))}

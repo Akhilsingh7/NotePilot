@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 
 import { useAppDispatch } from "@/redux/hooks";
 import { addLikeNote, removeLikeNote } from "@/redux/slices/likesSlice";
+import { editLikeCount } from "@/redux/slices/notesSlice";
 
 export function useNoteActions() {
   const { data: session } = useSession();
@@ -24,10 +25,17 @@ export function useNoteActions() {
       const data = res.data.data;
 
       if (data.liked) {
-        dispatch(addLikeNote(noteId));
+        dispatch(addLikeNote(data.noteId));
       } else {
-        dispatch(removeLikeNote(noteId));
+        dispatch(removeLikeNote(data.noteId));
       }
+
+      dispatch(
+        editLikeCount({
+          noteId: data.noteId,
+          likesCount: data.likesCount,
+        })
+      );
 
       onLikeUpdate?.(data.noteId, data.likesCount);
     } catch {
