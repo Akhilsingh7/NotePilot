@@ -10,10 +10,7 @@ export function useNoteActions() {
   const { data: session } = useSession();
   const dispatch = useAppDispatch();
 
-  const toggleLike = async (
-    noteId: string,
-    onLikeUpdate?: (noteId: string, likesCount: number) => void
-  ) => {
+  const toggleLike = async (noteId: string) => {
     try {
       if (!session) {
         toast.error("Please login to like");
@@ -36,8 +33,6 @@ export function useNoteActions() {
           likesCount: data.likesCount,
         })
       );
-
-      onLikeUpdate?.(data.noteId, data.likesCount);
     } catch {
       console.log("error liking note");
     }

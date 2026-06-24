@@ -19,7 +19,7 @@ type NoteCardProps = {
 
 function ExploreNoteCard({
   note,
-  onLikeUpdate,
+  // onLikeUpdate,
   // showPrivateBadge = false,
   // showActions = true,
 }: NoteCardProps) {
@@ -62,10 +62,11 @@ function ExploreNoteCard({
 
             <button
               className="flex items-center gap-1 text-gray-500 transition-colors "
+              disabled={!session}
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                toggleLike(note._id, onLikeUpdate);
+                toggleLike(note._id);
               }}
             >
               <Heart

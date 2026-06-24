@@ -1,6 +1,11 @@
 import { Note } from "@/types/Note";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+  createEntityAdapter,
+} from "@reduxjs/toolkit";
 import axios from "axios";
+import { RootState } from "../store";
 
 export const fetchNotes = createAsyncThunk("notes/fetchNotes", async () => {
   const res = await axios.get("/api/notes");
@@ -8,36 +13,35 @@ export const fetchNotes = createAsyncThunk("notes/fetchNotes", async () => {
   return res.data.data;
 });
 
-type NoteState = {
-  notes: Note[];
-  loading: boolean;
-  error: string | null;
-};
+const notesAdapter = createEntityAdapter<Note, string>({
+  selectId: (note) => note._id,
+});
 
-const initialState: NoteState = {
-  notes: [],
+const initialState = notesAdapter.getInitialState({
   loading: false,
-  error: null,
-};
+  error: null as string | null,
+});
 
 const noteSlice = createSlice({
   name: "notes",
   initialState: initialState,
   reducers: {
     editLikeCount: (state, action) => {
-      state.notes = state.notes.map((note) =>
-        note._id === action.payload.noteId
-          ? { ...note, likesCount: action.payload.likesCount }
-          : note
-      );
+      notesAdapter.updateOne(state, {
+        id: action.payload.noteId,
+        changes: {
+          likesCount: action.payload.likesCount,
+        },
+      });
     },
     updateNote: (state, action) => {
-      state.notes = state.notes.map((note) =>
-        note._id === action.payload._id ? action.payload : note
-      );
+      notesAdapter.upsertOne(state, action.payload);
     },
     deleteNote: (state, action) => {
-      state.notes = state.notes.filter((note) => note._id !== action.payload);
+      notesAdapter.removeOne(state, action.payload);
+    },
+    upsertManyNotes: (state, action) => {
+      notesAdapter.upsertMany(state, action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -48,7 +52,7 @@ const noteSlice = createSlice({
       })
       .addCase(fetchNotes.fulfilled, (state, action) => {
         state.loading = false;
-        state.notes = action.payload;
+        notesAdapter.setAll(state, action.payload);
       })
       .addCase(fetchNotes.rejected, (state) => {
         state.loading = false;
@@ -57,5 +61,10 @@ const noteSlice = createSlice({
   },
 });
 
-export const { editLikeCount, updateNote, deleteNote } = noteSlice.actions;
+export const notesSelectors = notesAdapter.getSelectors(
+  (state: RootState) => state.notes
+);
+
+export const { editLikeCount, updateNote, deleteNote, upsertManyNotes } =
+  noteSlice.actions;
 export default noteSlice.reducer;

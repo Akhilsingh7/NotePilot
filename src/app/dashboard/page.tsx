@@ -2,6 +2,7 @@
 
 import DashboardNoteCard from "@/components/notes/DashboardNoteCard";
 import { useAppSelector } from "@/redux/hooks";
+import { notesSelectors } from "@/redux/slices/notesSlice";
 import {
   Heart,
   Pin,
@@ -11,6 +12,7 @@ import {
   List,
   FileText,
 } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 
 const likedNotes = [
@@ -71,7 +73,7 @@ function Section({ title, icon, notes, maxItems = 3 }: SectionProps) {
       {notes.length >= 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
           {notes.slice(0, maxItems).map((note) => (
-            <DashboardNoteCard key={note.id} note={note} />
+            <DashboardNoteCard key={note._id} note={note} />
           ))}
         </div>
       ) : (
@@ -86,9 +88,15 @@ function Section({ title, icon, notes, maxItems = 3 }: SectionProps) {
 export default function DashboardPage() {
   const likeNoteIds = useAppSelector((state) => state.likes.likedNoteIds);
 
-  const loggedInUserNotes = useAppSelector((state) => state.notes.notes);
+  const { data: session } = useSession();
+  console.log("logged in user is", session?.user.id);
 
-  // const likedNote  = loggedInUserNotes.filter((note)=>note._id ==likeNoteIds)
+  const allNotes = useAppSelector(notesSelectors.selectAll);
+
+  const loggedInUserNotes = allNotes.filter(
+    (note) => note.userId === session?.user.id
+  );
+  const likedNotes = allNotes.filter((note) => likeNoteIds.includes(note._id));
 
   // useEffect(()=>{
 
@@ -96,14 +104,17 @@ export default function DashboardPage() {
 
   const sections = [
     {
+      id: "1",
       title: "My Notes",
       notes: loggedInUserNotes,
       href: "/",
     },
-    // {
-    //   title: "Liked Notes",
-    //   data: likeNoteIds,
-    // },
+    {
+      id: "2",
+      title: "Liked Notes",
+      notes: likedNotes,
+      href: "/",
+    },
     // { tittle: "Public Notes", datat: [] },
   ];
 
@@ -149,6 +160,7 @@ export default function DashboardPage() {
         <div className="space-y-16">
           {sections.map((section) => (
             <Section
+              key={section.id}
               title={section.title}
               icon={<span className="h-5 w-5 text-pink-500">⭐</span>}
               notes={section.notes}

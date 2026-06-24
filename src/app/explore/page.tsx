@@ -10,34 +10,40 @@ import NoteCardSkeleton from "@/components/notes/NoteCardSkeleton";
 import { Note } from "@/types/Note";
 import ExploreNoteCard from "@/components/notes/ExploreNoteCard";
 import { runInThisContext } from "vm";
+import { notesSelectors, upsertManyNotes } from "@/redux/slices/notesSlice";
 
 function Explore() {
-  const [notes, setNotes] = useState<Note[]>([]);
+  // const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const likedNoteIds = useAppSelector((state) => state.likes.likedNoteIds);
+  // const likedNoteIds = useAppSelector((state) => state.likes.likedNoteIds);
 
+  const notes = useAppSelector(notesSelectors.selectAll);
   const dispatch = useAppDispatch();
 
   const { data: session } = useSession();
 
-  const updateNoteLikeCount = (noteId: string, likesCount: number) => {
-    if (!session) {
-      return;
-    }
-    setNotes((prev) =>
-      prev.map((note) => (note._id == noteId ? { ...note, likesCount } : note))
-    );
-  };
+  console.log("notes is", notes);
+
+  // const updateNoteLikeCount = (noteId: string, likesCount: number) => {
+  //   if (!session) {
+  //     return;
+  //   }
+  //   setNotes((prev) =>
+  //     prev.map((note) => (note._id == noteId ? { ...note, likesCount } : note))
+  //   );
+  // };
 
   useEffect(() => {
     const fetchPublicNotes = async () => {
       try {
         const res = await axios.get("/api/public-notes");
 
-        console.log("public notes are", res.data.data);
+        console.log("public notes are", res.data);
 
-        setNotes(res.data.data);
+        if (res.data.success) {
+          dispatch(upsertManyNotes(res.data.data));
+        }
       } catch (error) {
         console.log("Error fetching notes", error);
       } finally {
@@ -80,7 +86,7 @@ function Explore() {
               <ExploreNoteCard
                 note={note}
                 key={note._id}
-                onLikeUpdate={updateNoteLikeCount}
+                // onLikeUpdate={updateNoteLikeCount}
               />
             ))
           )}

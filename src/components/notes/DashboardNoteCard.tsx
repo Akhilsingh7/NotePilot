@@ -1,6 +1,8 @@
 import { getPreviewText } from "@/helpers/getPreviewText";
 import { Heart } from "lucide-react";
 import Link from "next/link";
+import { useNoteActions } from "./useNoteAction";
+import { useAppSelector } from "@/redux/hooks";
 
 // type DashboardNoteCardProps = {
 //   note: {
@@ -15,6 +17,9 @@ import Link from "next/link";
 // };
 
 export default function DashboardNoteCard({ note }: any) {
+  const { toggleLike } = useNoteActions();
+  const likedNoteIds = useAppSelector((state) => state.likes.likedNoteIds);
+
   return (
     <Link key={note._id} href={`/notes/${note._id}`} className="block h-full">
       <div className="h-full rounded-2xl border border-zinc-800 bg-zinc-900 p-4 md:p-5 transition hover:border-zinc-700">
@@ -61,10 +66,24 @@ export default function DashboardNoteCard({ note }: any) {
             })}
           </span>
 
-          <div className="flex items-center gap-1">
-            <Heart size={16} />
-            <span>{note.likesCount}</span>
-          </div>
+          <button
+            className="flex items-center gap-1 text-gray-500 transition-colors "
+            // disabled={!session}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              toggleLike(note._id);
+            }}
+          >
+            <Heart
+              className={`h-4 w-4 transition-all ${
+                likedNoteIds.includes(note._id)
+                  ? "fill-white text-black"
+                  : "text-gray-500"
+              }`}
+            />
+            <span className="text-sm text-white">{note.likesCount}</span>
+          </button>
         </div>
       </div>
     </Link>
