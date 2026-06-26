@@ -13,31 +13,8 @@ import {
   FileText,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useEffect } from "react";
-
-const likedNotes = [
-  {
-    id: 4,
-    title: "Rust for JS devs",
-    description: "Ownership, borrowing and lifetimes...",
-    date: "30 May 2026",
-    likes: 89,
-  },
-  {
-    id: 5,
-    title: "Docker deep dive",
-    description: "Multi-stage builds, networking...",
-    date: "28 May 2026",
-    likes: 57,
-  },
-  {
-    id: 6,
-    title: "Next.js 15 features",
-    description: "Partial prerendering, caching...",
-    date: "25 May 2026",
-    likes: 112,
-  },
-];
 
 function StatCard({ title, value }: { title: string; value: number }) {
   return (
@@ -56,7 +33,7 @@ type SectionProps = {
   href: string;
 };
 
-function Section({ title, icon, notes, maxItems = 3 }: SectionProps) {
+function Section({ title, icon, notes, href, maxItems = 3 }: SectionProps) {
   return (
     <section className="space-y-6">
       <div className="flex items-center justify-between">
@@ -67,7 +44,9 @@ function Section({ title, icon, notes, maxItems = 3 }: SectionProps) {
           </h2>
         </div>
 
-        <button className="text-zinc-400 hover:text-white">See all</button>
+        <Link href={href}>
+          <div className="text-zinc-400 hover:text-white">See all</div>
+        </Link>
       </div>
 
       {notes.length >= 0 ? (
@@ -107,13 +86,13 @@ export default function DashboardPage() {
       id: "1",
       title: "My Notes",
       notes: loggedInUserNotes,
-      href: "/",
+      href: "/dashboard/my-notes",
     },
     {
       id: "2",
       title: "Liked Notes",
       notes: likedNotes,
-      href: "/",
+      href: "/dashboard/liked-notes",
     },
     // { tittle: "Public Notes", datat: [] },
   ];
@@ -126,7 +105,7 @@ export default function DashboardPage() {
         <div className="mb-10 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <h1 className="text-4xl font-bold">Dashboard</h1>
 
-          <div className="flex flex-col gap-3 sm:flex-row">
+          {/* <div className="flex flex-col gap-3 sm:flex-row">
             <div className="relative">
               <Search
                 size={18}
@@ -143,17 +122,17 @@ export default function DashboardPage() {
               <Plus size={18} />
               New Note
             </button>
-          </div>
+          </div> */}
         </div>
 
         {/* Stats */}
 
-        <div className="mb-12 grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <StatCard title="Total Notes" value={32} />
-          {/* <StatCard title="Pinned" value={5} /> */}
-          <StatCard title="Liked" value={12} />
+        {/* <div className="mb-12 grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <StatCard title="Total Notes" value={32} /> */}
+        {/* <StatCard title="Pinned" value={5} /> */}
+        {/* <StatCard title="Liked" value={12} />
           <StatCard title="Public" value={18} />
-        </div>
+        </div> */}
 
         {/* Sections */}
 
