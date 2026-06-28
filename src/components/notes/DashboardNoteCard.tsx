@@ -4,18 +4,6 @@ import Link from "next/link";
 import { useNoteActions } from "./useNoteAction";
 import { useAppSelector } from "@/redux/hooks";
 
-// type DashboardNoteCardProps = {
-//   note: {
-//     id: number;
-//     title: string;
-//     description: string;
-//     date: string;
-//     likes: number;
-//     pinned?: boolean;
-//     visibility?: string;
-//   };
-// };
-
 export default function DashboardNoteCard({ note }: any) {
   const { toggleLike } = useNoteActions();
   const likedNoteIds = useAppSelector((state) => state.likes.likedNoteIds);

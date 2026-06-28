@@ -9,7 +9,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    const validation = signUpSchema.safeParse(body);
+    const validation = signUpSchema.safeParse(body.data);
 
     if (!validation.success) {
       return errorResponse(
@@ -25,7 +25,9 @@ export async function POST(request: Request) {
 
     const redisClient = await getRedis();
 
-    const isVerified = await redisClient.get(`verified:${email}`);
+    const isVerified = await redisClient.get(
+      `${body.purpose}:verified:${email}`
+    );
 
     if (!isVerified) {
       return errorResponse("Please verify your email first", 400);
@@ -49,7 +51,7 @@ export async function POST(request: Request) {
       },
     });
 
-    await redisClient.del(`verified:${email}`);
+    await redisClient.del(`${body.purpose}:verified:${email}`);
 
     return successResponse(
       { id: user.id, email: user.email },

@@ -35,6 +35,7 @@ function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
   const [title, setTitle] = useState("");
   const [isPublic, setIsPublic] = useState(false);
   const { noteId } = use(params);
+
   const route = useRouter();
   const dispatch = useAppDispatch();
 
@@ -122,9 +123,11 @@ function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
     );
   }
 
+  console.log("public or not", note.isPublic);
+
   return (
     <AlertDialog>
-      <main className="max-w-4xl mx-auto px-6 py-10">
+      <main className="max-w-4xl mx-auto px-6 py-10 flex flex-col gap-2">
         {isOwner && (
           <div className="flex justify-end gap-2 mb-6">
             {isOwner && !isEditable && (
@@ -159,12 +162,12 @@ function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
         )}
 
         {!isEditable ? (
-          <h1 className="text-5xl font-serif font-bold mb-6">{title}</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold mb-6">{title}</h1>
         ) : (
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full text-5xl font-serif font-bold outline-none border-b pb-2 mb-6"
+            className="w-full text-3xl sm:text-4xl md:text-5xl font-serif font-bold outline-none border-b pb-2 mb-6"
           />
         )}
 
@@ -179,8 +182,7 @@ function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
 
         <div className="flex items-center gap-4 mb-8 text-sm text-gray-500">
           <span>❤️ {note.likesCount}</span>
-
-          <span>{isPublic ? "🌍 Public" : "🔒 Private"}</span>
+          <span>{note.isPublic ? "Public 🌍" : "Private 🔒"}</span>
         </div>
 
         {isEditable && (

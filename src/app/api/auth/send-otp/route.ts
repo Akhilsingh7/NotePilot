@@ -9,7 +9,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    const email = body.email.toLowerCase().trim();
+    const email = body.data.email.toLowerCase().trim();
 
     const emailSchemaVerify = emailValidation.safeParse(email);
 
@@ -27,13 +27,13 @@ export async function POST(request: Request) {
       },
     });
 
-    if (user) {
+    if (body.purpose === "sign-up" && user) {
       return errorResponse("User already exists. Please login", 400);
     }
 
     const redisClient = await getRedis();
 
-    const existingOtp = await redisClient.get(`otp:${email}`);
+    const existingOtp = await redisClient.get(`${body.purpose}-otp:${email}`);
 
     if (existingOtp) {
       return errorResponse("OTP already sent. Please wait 5 minutes", 429);
@@ -41,14 +41,14 @@ export async function POST(request: Request) {
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    await redisClient.set(`otp:${email}`, otp, { EX: 60 });
+    await redisClient.set(`${body.purpose}-otp:${email}`, otp, { EX: 60 });
 
-    await redisClient.del(`verified:${email}`);
+    await redisClient.del(`${body.purpose}-verified:${email}`);
 
     try {
       await sendOtpEmail(email, otp);
     } catch {
-      await redisClient.del(`otp:${email}`);
+      await redisClient.del(`${body.purpose}-otp:${email}`);
       return errorResponse("Failed to send OTP. Please try again", 500);
     }
 

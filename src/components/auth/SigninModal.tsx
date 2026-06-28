@@ -17,6 +17,8 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Loader } from "../ui/loader";
+import PasswordInput from "../common/PasswordInput";
+import Link from "next/link";
 
 type Props = {
   open: boolean;
@@ -28,6 +30,7 @@ export function SigninModal({ open, onOpenChange }: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const signInUser = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -97,8 +100,7 @@ export function SigninModal({ open, onOpenChange }: Props) {
 
             <div>
               <Label>Password</Label>
-              <Input
-                type="password"
+              <PasswordInput
                 placeholder="Enter password"
                 name="password"
                 value={password}
@@ -107,9 +109,19 @@ export function SigninModal({ open, onOpenChange }: Props) {
               />
             </div>
 
-            <div className="flex items-center gap-2 text-sm">
-              <Checkbox />
-              <span>Remember me</span>
+            <div className="flex justify-between text-sm">
+              <div className="flex items-center gap-2 ">
+                <Checkbox />
+                <span>Remember me</span>
+              </div>
+
+              <Link
+                href={"/forgot-password"}
+                className="text-primary hover:underline"
+                onClick={() => onOpenChange(false)}
+              >
+                <div>Forget Password</div>
+              </Link>
             </div>
 
             <Button type="submit" className="w-full " disabled={loading}>

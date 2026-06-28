@@ -3,15 +3,6 @@
 import DashboardNoteCard from "@/components/notes/DashboardNoteCard";
 import { useAppSelector } from "@/redux/hooks";
 import { notesSelectors } from "@/redux/slices/notesSlice";
-import {
-  Heart,
-  Pin,
-  Search,
-  Plus,
-  Grid2X2,
-  List,
-  FileText,
-} from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -103,7 +94,7 @@ export default function DashboardPage() {
         {/* Header */}
 
         <div className="mb-10 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <h1 className="text-4xl font-bold">Dashboard</h1>
+          {/* <h1 className="text-4xl font-bold">Dashboard</h1> */}
 
           {/* <div className="flex flex-col gap-3 sm:flex-row">
             <div className="relative">

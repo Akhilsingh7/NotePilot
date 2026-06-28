@@ -5,8 +5,8 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    const email = body.email?.toLowerCase().trim();
-    const otp = body.otp;
+    const email = body.data.email?.toLowerCase().trim();
+    const otp = body.data.otp;
 
     if (!email || !otp) {
       return errorResponse("Email and OTP are required", 400);
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
 
     const redisClient = await getRedis();
 
-    const storedOtp = await redisClient.get(`otp:${email}`);
+    const storedOtp = await redisClient.get(`${body.purpose}-otp:${email}`);
 
     if (!storedOtp) {
       return errorResponse("OTP expired. Please request a new one", 400);
@@ -26,7 +26,9 @@ export async function POST(request: Request) {
 
     await redisClient.del(`otp:${email}`);
 
-    await redisClient.set(`verified:${email}`, "true", { EX: 600 });
+    await redisClient.set(`${body.purpose}-verified:${email}`, "true", {
+      EX: 600,
+    });
 
     return successResponse(
       null,

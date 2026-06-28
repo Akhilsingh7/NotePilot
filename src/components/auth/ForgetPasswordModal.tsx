@@ -22,17 +22,11 @@ type Props = {
   onOpenChange: (open: boolean) => void;
 };
 
-export function SignupModal({ open, onOpenChange }: Props) {
+export function ForgetPasswordModal({ open, onOpenChange }: Props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [password, setPassword] = useState("");
-
-  // const [sendOtpDisable, setOtpDisable] = useState(false);
-
-  // const [verifyOtpDisable, setVerifyOtpDisable] = useState(false);
-
-  // const [cooldown, setCooldown] = useState(0);
 
   const { sendOtp, cooldown, sendLoading } = useSendOtp();
 

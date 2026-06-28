@@ -3,6 +3,7 @@ import { errorResponse, successResponse } from "@/lib/response";
 import NotesModel from "@/models/Notes.model";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/option";
+import mongoose from "mongoose";
 
 export async function GET(
   request: Request,
@@ -13,19 +14,29 @@ export async function GET(
 
     const session = await getServerSession(authOptions);
 
-    if (!session) {
-      return errorResponse("Unauthorized user", 401);
-    }
-
     const { noteId } = await params;
+
+    if (!mongoose.Types.ObjectId.isValid(noteId)) {
+      return errorResponse("Invalid note id", 400);
+    }
 
     const note = await NotesModel.findOne({
       _id: noteId,
-      userId: session.user.id,
     });
 
     if (!note) {
       return errorResponse("Note not found", 404);
+    }
+
+    if (note.isPublic) {
+      return successResponse(note, "Note fetched successfully", 200);
+    }
+
+    if (!session) {
+      return errorResponse("Unauthorized user", 401);
+    }
+    if (note.userId !== session.user.id) {
+      return errorResponse("Forbidden", 403);
     }
 
     return successResponse(note, "Note fetched successfully", 200);

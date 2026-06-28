@@ -36,9 +36,9 @@ export default function Home() {
         </div>
       </nav> */}
 
-      <section className="flex items-center justify-between px-16 py-20">
+      <section className="flex flex-col md:flex-row items-center justify-between px-6 md:px-16 py-12 md:py-20">
         <div className="max-w-xl">
-          <h1 className="text-7xl font-serif leading-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif leading-tight">
             Human stories & ideas
           </h1>
 

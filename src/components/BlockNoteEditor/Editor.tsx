@@ -70,7 +70,7 @@ export default function BlockEditor() {
         value={title}
         required
         onChange={(e) => setTitle(e.target.value)}
-        className="w-full text-4xl font-bold outline-none placeholder-gray-400 mb-6"
+        className="w-full text-2xl sm:text-3xl md:text-4xl font-bold outline-none placeholder-gray-400 mb-6"
       />
 
       <div className="flex justify-end items-center mb-4">

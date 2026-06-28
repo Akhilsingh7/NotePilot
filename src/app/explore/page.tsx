@@ -13,26 +13,12 @@ import { runInThisContext } from "vm";
 import { notesSelectors, upsertManyNotes } from "@/redux/slices/notesSlice";
 
 function Explore() {
-  // const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // const likedNoteIds = useAppSelector((state) => state.likes.likedNoteIds);
-
   const notes = useAppSelector(notesSelectors.selectAll);
+
+  const publicNotes = notes.filter((note) => note.isPublic);
   const dispatch = useAppDispatch();
-
-  const { data: session } = useSession();
-
-  console.log("notes is", notes);
-
-  // const updateNoteLikeCount = (noteId: string, likesCount: number) => {
-  //   if (!session) {
-  //     return;
-  //   }
-  //   setNotes((prev) =>
-  //     prev.map((note) => (note._id == noteId ? { ...note, likesCount } : note))
-  //   );
-  // };
 
   useEffect(() => {
     const fetchPublicNotes = async () => {
@@ -58,7 +44,7 @@ function Explore() {
     <main className="min-h-screen bg-[#fdfdfc]">
       <section className="border-b bg-[#f7f4ed]">
         <div className="max-w-6xl mx-auto px-6 py-10">
-          <h1 className="text-5xl font-serif leading-tight max-w-3xl">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif leading-tight max-w-3xl">
             Explore ideas, stories & knowledge
           </h1>
 
@@ -77,17 +63,13 @@ function Explore() {
                 <NoteCardSkeleton key={item} />
               ))}
             </>
-          ) : notes.length === 0 ? (
+          ) : publicNotes.length === 0 ? (
             <div className="text-center py-20 text-gray-500">
               No public notes found.
             </div>
           ) : (
-            notes.map((note) => (
-              <ExploreNoteCard
-                note={note}
-                key={note._id}
-                // onLikeUpdate={updateNoteLikeCount}
-              />
+            publicNotes.map((note) => (
+              <ExploreNoteCard note={note} key={note._id} />
             ))
           )}
         </div>

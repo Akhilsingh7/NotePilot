@@ -13,20 +13,12 @@ useNoteActions;
 type NoteCardProps = {
   note: Note;
   onLikeUpdate?: (noteId: string, likesCount: number) => void;
-  // showPrivateBadge?: boolean;
-  // showActions?: boolean;
 };
 
-function ExploreNoteCard({
-  note,
-  // onLikeUpdate,
-  // showPrivateBadge = false,
-  // showActions = true,
-}: NoteCardProps) {
+function ExploreNoteCard({ note }: NoteCardProps) {
   const { data: session } = useSession();
   const likedNoteIds = useAppSelector((state) => state.likes.likedNoteIds);
 
-  const dispatch = useAppDispatch();
   const { toggleLike } = useNoteActions();
 
   return (
@@ -57,7 +49,7 @@ function ExploreNoteCard({
 
               <span>•</span>
 
-              <span>Public</span>
+              <span>{note.isPublic ? "Public" : "Private"}</span>
             </div>
 
             <button

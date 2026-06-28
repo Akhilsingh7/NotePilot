@@ -10,17 +10,19 @@ export const nameValidation = z
 
 export const emailValidation = z.string().trim().email().toLowerCase();
 
+export const passwordValidationSchema = z
+  .string()
+  .trim()
+  .min(1, "Please enter password")
+  .min(6, "Password must be at least 6 characters")
+  .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+  .regex(/[0-9]/, "Password must contain at least one number");
+
 export const signUpSchema = z.object({
   name: nameValidation,
   email: emailValidation,
 
-  password: z
-    .string()
-    .trim()
-    .min(1, "Please enter password")
-    .min(6, "Password must be at least 6 characters")
-    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .regex(/[0-9]/, "Password must contain at least one number"),
+  password: passwordValidationSchema,
 });
 
 export type SignupInput = z.infer<typeof signUpSchema>;
