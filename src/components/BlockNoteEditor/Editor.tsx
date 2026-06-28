@@ -1,13 +1,8 @@
 "use client";
 
-import "@blocknote/core/fonts/inter.css";
 import { useCreateBlockNote } from "@blocknote/react";
-import { BlockNoteView } from "@blocknote/mantine";
-import { SuggestionMenuController } from "@blocknote/react";
-import "@blocknote/mantine/style.css";
 import { useState } from "react";
 import { schema } from "./CustomSchema";
-import { getCustomSlashMenuItems } from "./CustomSlash";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
@@ -51,11 +46,13 @@ export default function BlockEditor() {
 
         editor.replaceBlocks(editor.document, []);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.log("error:", err);
 
       const message =
-        err?.response?.data?.message || "Error creating note. Try again later";
+        axios.isAxiosError(err) && err.response?.data?.message
+          ? err.response.data.message
+          : "Error creating note. Try again later";
 
       toast.error(message);
     } finally {
@@ -63,7 +60,7 @@ export default function BlockEditor() {
     }
   };
   return (
-    <div className="max-w-3xl mx-auto mt-10">
+    <div className="mx-auto mt-10 w-full min-w-0 max-w-3xl">
       <input
         type="text"
         placeholder="Untitled"
@@ -88,7 +85,7 @@ export default function BlockEditor() {
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-xl shadow-sm">
+      <div className="min-w-0 bg-white p-3 sm:p-6 rounded-xl shadow-sm">
         <NoteEditor editor={editor} editable={!loading} />
       </div>
       <div>

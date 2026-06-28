@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import "@blocknote/core/fonts/inter.css";
+import "@blocknote/mantine/style.css";
 import "./globals.css";
 import AuthProvider from "@/context/AuthProvider";
 import Navbar from "@/components/common/Navbar";

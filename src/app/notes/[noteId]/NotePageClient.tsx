@@ -127,7 +127,7 @@ function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
 
   return (
     <AlertDialog>
-      <main className="max-w-4xl mx-auto px-6 py-10 flex flex-col gap-2">
+      <main className="mx-auto flex w-full min-w-0 max-w-4xl flex-col gap-2 px-3 py-10 sm:px-6">
         {isOwner && (
           <div className="flex justify-end gap-2 mb-6">
             {isOwner && !isEditable && (
@@ -162,12 +162,14 @@ function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
         )}
 
         {!isEditable ? (
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold mb-6">{title}</h1>
+          <h1 className="mb-6 break-words text-3xl font-serif font-bold sm:text-4xl md:text-5xl">
+            {title}
+          </h1>
         ) : (
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full text-3xl sm:text-4xl md:text-5xl font-serif font-bold outline-none border-b pb-2 mb-6"
+            className="mb-6 w-full min-w-0 border-b pb-2 text-3xl font-serif font-bold outline-none sm:text-4xl md:text-5xl"
           />
         )}
 
@@ -176,7 +178,7 @@ function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
             {note.authorName?.slice(0, 2).toUpperCase()}
           </div>
         </div>
-        <div className="border-t pt-8">
+        <div className="min-w-0 border-t pt-8">
           <NoteEditor editor={editor} editable={isEditable} />
         </div>
 

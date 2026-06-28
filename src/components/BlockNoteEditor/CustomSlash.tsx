@@ -1,10 +1,11 @@
 import {
+  type BlockNoteEditor,
   getDefaultSlashMenuItems,
   type DefaultSuggestionItem,
 } from "@blocknote/core";
 
 export const getCustomSlashMenuItems = (
-  editor: any
+  editor: BlockNoteEditor
 ): DefaultSuggestionItem[] => {
   const items = getDefaultSlashMenuItems(editor);
 
