@@ -2,14 +2,9 @@
 
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { setLikedNotes } from "@/redux/slices/likesSlice";
-import NoteCard from "@/components/notes/ExploreNoteCard";
 import NoteCardSkeleton from "@/components/notes/NoteCardSkeleton";
-import { Note } from "@/types/Note";
 import ExploreNoteCard from "@/components/notes/ExploreNoteCard";
-import { runInThisContext } from "vm";
 import { notesSelectors, upsertManyNotes } from "@/redux/slices/notesSlice";
 
 function Explore() {
@@ -38,7 +33,7 @@ function Explore() {
     };
 
     fetchPublicNotes();
-  }, []);
+  }, [dispatch]);
 
   return (
     <main className="min-h-screen bg-[#fdfdfc]">

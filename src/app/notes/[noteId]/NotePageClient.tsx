@@ -11,9 +11,9 @@ import { use, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useAppDispatch } from "@/redux/hooks";
 import { deleteNote, updateNote } from "@/redux/slices/notesSlice";
-import { Note } from "@/types/Note";
+import type { Note } from "@/types/Note";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
-  const [note, setNote] = useState<any>(null);
+  const [note, setNote] = useState<Note | null>(null);
   const [loading, setLoading] = useState(true);
 
   const [isEditable, setIsEditable] = useState(false);
@@ -50,7 +50,11 @@ function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
         const res = await axios.get(`/api/notes/${noteId}`);
         console.log("data of single note is ", res.data);
         if (res.data.success) {
-          setNote(res.data.data);
+          const fetchedNote = res.data.data as Note;
+          setNote(fetchedNote);
+          setTitle(fetchedNote.title);
+          setIsPublic(fetchedNote.isPublic);
+          editor.replaceBlocks(editor.document, fetchedNote.content);
         }
       } catch (error) {
         console.error("Failed to fetch particular note single page:", error);
@@ -62,16 +66,7 @@ function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
     };
 
     fetchNote();
-  }, []);
-
-  useEffect(() => {
-    if (!note) return;
-
-    setTitle(note.title);
-    setIsPublic(note.isPublic);
-
-    editor.replaceBlocks(editor.document, note.content);
-  }, [note, editor]);
+  }, [editor, noteId, route]);
 
   const editNotesHandler = async () => {
     try {
@@ -123,7 +118,9 @@ function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
     );
   }
 
-  console.log("public or not", note.isPublic);
+  if (!note) {
+    return null;
+  }
 
   return (
     <AlertDialog>

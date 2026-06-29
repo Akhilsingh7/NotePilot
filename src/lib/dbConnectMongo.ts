@@ -1,8 +1,13 @@
 import mongoose from "mongoose";
 
-// type ConnectionObject = {
-//   isConnected?: number;
-// };
+type CachedMongoose = {
+  conn: mongoose.Connection | null;
+  promise: Promise<typeof mongoose> | null;
+};
+
+type MongooseGlobal = typeof globalThis & {
+  mongoose?: CachedMongoose;
+};
 
 const MONGODB_URI = process.env.MONGODB_URI!;
 
@@ -10,18 +15,20 @@ if (!MONGODB_URI) {
   throw new Error("Please define MONGODB_URI");
 }
 
-let cached = (global as any).mongoose;
+const globalForMongoose = globalThis as MongooseGlobal;
 
-if (!cached) {
-  cached = (global as any).mongoose = {
-    conn: null as mongoose.Connection | null,
-    promise: null as Promise<typeof mongoose> | null,
+if (!globalForMongoose.mongoose) {
+  globalForMongoose.mongoose = {
+    conn: null,
+    promise: null,
   };
 }
 
+const cached = globalForMongoose.mongoose;
+
 async function dbConnect(): Promise<void> {
   if (cached.conn) {
-    return cached.conn;
+    return;
   }
 
   if (!cached.promise) {
@@ -33,7 +40,7 @@ async function dbConnect(): Promise<void> {
 
   console.log("MongoDB connected");
 
-  return cached.conn;
+  return;
 }
 
 export default dbConnect;

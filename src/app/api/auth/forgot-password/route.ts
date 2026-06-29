@@ -75,9 +75,12 @@ export async function POST(request: Request) {
       "User Password updated successfully",
       200
     );
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
 
-    return errorResponse(error?.message || "Error in updating user", 500);
+    return errorResponse(
+      error instanceof Error ? error.message : "Error in updating user",
+      500
+    );
   }
 }

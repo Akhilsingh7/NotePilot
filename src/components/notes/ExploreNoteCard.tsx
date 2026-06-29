@@ -1,14 +1,10 @@
 import { getPreviewText } from "@/helpers/getPreviewText";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { addLikeNote, removeLikeNote } from "@/redux/slices/likesSlice";
+import { useAppSelector } from "@/redux/hooks";
 import { Note } from "@/types/Note";
-import axios from "axios";
 import { Heart } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import toast from "react-hot-toast";
 import { useNoteActions } from "./useNoteAction";
-useNoteActions;
 
 type NoteCardProps = {
   note: Note;

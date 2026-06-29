@@ -1,19 +1,25 @@
-import type { BlockNoteEditor } from "@blocknote/core";
+import type {
+  BlockNoteEditor,
+  BlockSchema,
+  InlineContentSchema,
+  StyleSchema,
+} from "@blocknote/core";
 import { BlockNoteView } from "@blocknote/mantine";
 import { SuggestionMenuController } from "@blocknote/react";
 import { getCustomSlashMenuItems } from "./CustomSlash";
 
-type Props = {
-  // initialContent?: any;
-  editor: BlockNoteEditor;
-  editable: boolean;
-};
-
-export default function NoteEditor({
+export default function NoteEditor<
+  BSchema extends BlockSchema,
+  ISchema extends InlineContentSchema,
+  SSchema extends StyleSchema,
+>({
   // initialContent,
   editor,
   editable,
-}: Props) {
+}: {
+  editor: BlockNoteEditor<BSchema, ISchema, SSchema>;
+  editable: boolean;
+}) {
   return (
     <BlockNoteView
       editor={editor}

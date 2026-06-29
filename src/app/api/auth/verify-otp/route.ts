@@ -24,7 +24,7 @@ export async function POST(request: Request) {
       return errorResponse("Invalid OTP", 400);
     }
 
-    await redisClient.del(`otp:${email}`);
+    await redisClient.del(`${body.purpose}-otp:${email}`);
 
     await redisClient.set(`${body.purpose}-verified:${email}`, "true", {
       EX: 600,
@@ -35,11 +35,13 @@ export async function POST(request: Request) {
       "User verified successfully. Please proceed to signup",
       200
     );
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
 
     return errorResponse(
-      error?.message || "Error verifying user. Please try again later",
+      error instanceof Error
+        ? error.message
+        : "Error verifying user. Please try again later",
       500
     );
   }

@@ -9,7 +9,7 @@ import mongoose from "mongoose";
 
 export async function POST(
   request: Request,
-  { params }: { params: { noteId: string } }
+  { params }: { params: Promise<{ noteId: string }> }
 ) {
   try {
     await dbConnect();
@@ -24,6 +24,12 @@ export async function POST(
 
     if (!mongoose.Types.ObjectId.isValid(noteId)) {
       return errorResponse("Invalid note id", 400);
+    }
+
+    const note = await NotesModel.findById(noteId).select("_id");
+
+    if (!note) {
+      return errorResponse("Note not found", 404);
     }
 
     const alreadyLiked = await LikesModel.findOne({
@@ -86,7 +92,7 @@ export async function POST(
       "Note liked successfully",
       200
     );
-  } catch (error: any) {
+  } catch (error) {
     console.log("Error in liking note:", error);
 
     return errorResponse("Something went wrong", 500);

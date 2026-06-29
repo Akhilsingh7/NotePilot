@@ -19,14 +19,14 @@ export async function POST(request: Request) {
       );
     }
 
-    const name = body.name;
-    const email = body.email.toLowerCase().trim();
-    const password = body.password;
+    const name = validation.data.name;
+    const email = validation.data.email.toLowerCase().trim();
+    const password = validation.data.password;
 
     const redisClient = await getRedis();
 
     const isVerified = await redisClient.get(
-      `${body.purpose}:verified:${email}`
+      `${body.purpose}-verified:${email}`
     );
 
     if (!isVerified) {
@@ -58,9 +58,12 @@ export async function POST(request: Request) {
       "User registered successfully",
       201
     );
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
 
-    return errorResponse(error?.message || "Error in registering user", 500);
+    return errorResponse(
+      error instanceof Error ? error.message : "Error in registering user",
+      500
+    );
   }
 }

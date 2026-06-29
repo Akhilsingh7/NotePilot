@@ -21,19 +21,21 @@ export function useVerifyOtp() {
         return true;
       }
       return false;
-    } catch (err: any) {
-      console.log("error ", err.response.data);
+    } catch (err) {
+      console.log("error ", axios.isAxiosError(err) ? err.response?.data : err);
       setVerifyLoading(false);
 
-      const status = err?.response?.status;
-      const message = err?.response?.data?.message;
+      const status = axios.isAxiosError(err) ? err.response?.status : undefined;
+      const message = axios.isAxiosError(err)
+        ? err.response?.data?.message
+        : undefined;
 
       if (status === 400) {
         toast.error(message || "Something went wrong");
       } else {
         toast.error("Error verifying user. Please try again later");
       }
-      console.log("error ", err.response.data);
+      console.log("error ", axios.isAxiosError(err) ? err.response?.data : err);
       return false;
     } finally {
       setVerifyLoading(false);

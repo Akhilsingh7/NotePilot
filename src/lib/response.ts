@@ -18,7 +18,7 @@ export const successResponse = <T>(
 export const errorResponse = (
   message = "Something went wrong",
   status = 500,
-  errors?: any
+  errors?: unknown
 ) => {
   return Response.json(
     {

@@ -3,8 +3,9 @@ import { Heart } from "lucide-react";
 import Link from "next/link";
 import { useNoteActions } from "./useNoteAction";
 import { useAppSelector } from "@/redux/hooks";
+import type { Note } from "@/types/Note";
 
-export default function DashboardNoteCard({ note }: any) {
+export default function DashboardNoteCard({ note }: { note: Note }) {
   const { toggleLike } = useNoteActions();
   const likedNoteIds = useAppSelector((state) => state.likes.likedNoteIds);
 

@@ -1,11 +1,12 @@
 "use client";
 import { BlockNoteView } from "@blocknote/mantine";
 import { SuggestionMenuController, useCreateBlockNote } from "@blocknote/react";
+import type { NoteContent } from "@/types/Note";
 import { useEffect } from "react";
 import { getCustomSlashMenuItems } from "./CustomSlash";
 
 type Props = {
-  content: any[];
+  content: NoteContent;
   isOwner: boolean;
 };
 
@@ -23,8 +24,8 @@ function NoteViewer({ content, isOwner }: Props) {
       editor={editor}
       formattingToolbar={false}
       slashMenu={false}
-      editable={true}
-      // editable={isOwner}
+      sideMenu={false}
+      editable={isOwner}
     >
       <SuggestionMenuController
         triggerCharacter="/"

@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { FormEvent, useState } from "react";
-import axios from "axios";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -30,7 +29,6 @@ export function SigninModal({ open, onOpenChange }: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
 
   const signInUser = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -64,7 +62,7 @@ export function SigninModal({ open, onOpenChange }: Props) {
         router.push("/dashboard");
         onOpenChange(false);
       }
-    } catch (err: any) {
+    } catch (err) {
       console.log("error:", err);
       toast.error("Something went wrong");
     } finally {
@@ -74,7 +72,7 @@ export function SigninModal({ open, onOpenChange }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md rounded-xl">
+      <DialogContent className="max-w-sm rounded-xl">
         <DialogHeader>
           <DialogTitle className="text-center text-2xl font-semibold">
             Welcome back
@@ -86,7 +84,7 @@ export function SigninModal({ open, onOpenChange }: Props) {
 
         <form onSubmit={signInUser}>
           <div className="space-y-4 mt-4">
-            <div>
+            <div className="flex flex-col gap-2">
               <Label>Email</Label>
               <Input
                 type="text"
@@ -98,7 +96,7 @@ export function SigninModal({ open, onOpenChange }: Props) {
               />
             </div>
 
-            <div>
+            <div className="flex flex-col gap-2">
               <Label>Password</Label>
               <PasswordInput
                 placeholder="Enter password"

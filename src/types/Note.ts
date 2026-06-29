@@ -1,3 +1,7 @@
+import type { PartialBlock } from "@blocknote/core";
+
+export type NoteContent = PartialBlock[];
+
 export type Note = {
   _id: string;
 
@@ -7,7 +11,7 @@ export type Note = {
 
   title: string;
 
-  content: any[];
+  content: NoteContent;
 
   projectId?: string | null;
 

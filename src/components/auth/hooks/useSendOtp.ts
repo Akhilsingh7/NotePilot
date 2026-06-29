@@ -29,9 +29,11 @@ export function useSendOtp() {
         toast.success("Otp Send Successuffuly");
         setCooldown(60);
       }
-    } catch (err: any) {
-      const status = err?.response?.status;
-      const message = err?.response?.data?.message;
+    } catch (err) {
+      const status = axios.isAxiosError(err) ? err.response?.status : undefined;
+      const message = axios.isAxiosError(err)
+        ? err.response?.data?.message
+        : undefined;
 
       if (status === 429) {
         toast("OTP already sent. Please wait", {
@@ -44,7 +46,7 @@ export function useSendOtp() {
         toast.error("Something went wrong");
       }
 
-      console.log("error:", err?.response?.data);
+      console.log("error:", axios.isAxiosError(err) ? err.response?.data : err);
     } finally {
       setSendLoading(false);
     }

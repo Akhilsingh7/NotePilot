@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
@@ -137,14 +137,18 @@ export function ForgetPasswordModal({ open, onOpenChange }: Props) {
           callbackUrl: "/dashboard",
         });
       }
-    } catch (err: any) {
-      console.log("error ", err.response.data);
-      const message = err?.response?.data?.message;
-      const errors = err?.response?.data?.errors;
+    } catch (err) {
+      console.log("error ", axios.isAxiosError(err) ? err.response?.data : err);
+      const message = axios.isAxiosError(err)
+        ? err.response?.data?.message
+        : undefined;
+      const errors = axios.isAxiosError(err)
+        ? err.response?.data?.errors
+        : undefined;
 
       if (errors) {
-        Object.values(errors).forEach((msg: any) => {
-          toast.error(msg);
+        Object.values(errors).forEach((msg) => {
+          toast.error(String(msg));
         });
       } else {
         toast.error(message || "Signup failed");

@@ -3,23 +3,14 @@
 import DashboardNoteCard from "@/components/notes/DashboardNoteCard";
 import { useAppSelector } from "@/redux/hooks";
 import { notesSelectors } from "@/redux/slices/notesSlice";
+import type { Note } from "@/types/Note";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useEffect } from "react";
 
-function StatCard({ title, value }: { title: string; value: number }) {
-  return (
-    <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
-      <p className="text-zinc-400 text-sm">{title}</p>
-
-      <h2 className="mt-3 text-4xl font-bold">{value}</h2>
-    </div>
-  );
-}
 type SectionProps = {
   title: string;
   icon: React.ReactNode;
-  notes: any[];
+  notes: Note[];
   maxItems?: number;
   href: string;
 };
@@ -40,7 +31,7 @@ function Section({ title, icon, notes, href, maxItems = 3 }: SectionProps) {
         </Link>
       </div>
 
-      {notes.length >= 0 ? (
+      {notes.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
           {notes.slice(0, maxItems).map((note) => (
             <DashboardNoteCard key={note._id} note={note} />

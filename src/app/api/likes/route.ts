@@ -26,7 +26,7 @@ export async function GET() {
       "Fetched liked notes successfully",
       200
     );
-  } catch (error: any) {
+  } catch (error) {
     console.log("Error getting liked notes:", error);
 
     return errorResponse("Something went wrong", 500);

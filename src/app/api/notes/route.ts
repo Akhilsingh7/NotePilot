@@ -40,7 +40,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     await dbConnect();
 
@@ -62,7 +62,7 @@ export async function GET(request: Request) {
     }
 
     return successResponse(allNotes, "All nootes for the user", 200);
-  } catch (error: any) {
+  } catch (error) {
     console.log("error i getting all notes of the logen in user", error);
 
     return errorResponse(

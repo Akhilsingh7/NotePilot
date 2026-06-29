@@ -30,7 +30,7 @@ export async function GET() {
     }
 
     return successResponse(likedNote, "Note fetched successfully", 200);
-  } catch (error: any) {
+  } catch (error) {
     console.log("Error in getting particular note:", error);
 
     return errorResponse("Error in getting user note", 500);

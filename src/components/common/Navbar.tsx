@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 
@@ -11,7 +11,6 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
 export default function Navbar() {
-  const router = useRouter();
   const { data: session } = useSession();
 
   const [openSignup, setOpenSignup] = useState(false);
@@ -19,27 +18,6 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const pathname = usePathname();
-
-  const navLinks = !session
-    ? [
-        { label: "Explore", href: "/explore" },
-        { label: "Sign in", onClick: () => setOpenSignin(true) },
-        {
-          label: "Get started",
-          onClick: () => setOpenSignup(true),
-          isButton: true,
-        },
-      ]
-    : [
-        { label: "Explore", href: "/explore" },
-        { label: "Write", href: "/write" },
-        { label: "Dashboard", href: "/dashboard" },
-        {
-          label: "Logout",
-          onClick: () => signOut({ callbackUrl: "/" }),
-          isButton: true,
-        },
-      ];
 
   return (
     <header className="border-b bg-white relative">

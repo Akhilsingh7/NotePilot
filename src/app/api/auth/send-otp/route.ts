@@ -1,4 +1,3 @@
-import { formatZodErrors } from "@/helpers/zod-error";
 import { sendOtpEmail } from "@/lib/email";
 import { prisma } from "@/lib/prisma";
 import { getRedis } from "@/lib/redis";
@@ -53,9 +52,12 @@ export async function POST(request: Request) {
     }
 
     return successResponse(null, "OTP sent successfully", 200);
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
 
-    return errorResponse(error?.message || "Failed to send OTP", 500);
+    return errorResponse(
+      error instanceof Error ? error.message : "Failed to send OTP",
+      500
+    );
   }
 }

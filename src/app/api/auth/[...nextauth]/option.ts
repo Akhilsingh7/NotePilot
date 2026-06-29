@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { errorResponse } from "@/lib/response";
 import bcrypt from "bcryptjs";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -13,7 +12,7 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials: any): Promise<any> {
+      async authorize(credentials) {
         try {
           if (!credentials) return null;
           const email = credentials.email.toLowerCase().trim();
@@ -42,7 +41,7 @@ export const authOptions: NextAuthOptions = {
             email: user.email,
             name: user.name,
           };
-        } catch (error: any) {
+        } catch (error) {
           console.log("error in login next-auth", error);
           return null;
         }
@@ -71,7 +70,7 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   pages: {
-    signIn: "/auth/sign-in",
+    signIn: "/",
   },
   secret: process.env.NEXTAUTH_SECRET,
 };

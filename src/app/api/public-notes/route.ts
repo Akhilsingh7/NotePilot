@@ -2,7 +2,7 @@ import dbConnect from "@/lib/dbConnectMongo";
 import { errorResponse, successResponse } from "@/lib/response";
 import NotesModel from "@/models/Notes.model";
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     await dbConnect();
 
@@ -11,7 +11,7 @@ export async function GET(request: Request) {
     });
 
     return successResponse(allNote, "Public notes fetched", 200);
-  } catch (error: any) {
+  } catch (error) {
     console.log("Error in fecting all notes", error);
 
     return errorResponse("Erro in fetching all notes", 500);

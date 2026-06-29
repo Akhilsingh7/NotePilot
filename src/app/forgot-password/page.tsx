@@ -1,6 +1,5 @@
 "use client";
 
-import { SigninModal } from "@/components/auth/SigninModal";
 import { useSendOtp } from "@/components/auth/hooks/useSendOtp";
 import { useVerifyOtp } from "@/components/auth/hooks/useVerifyOtp";
 import PasswordInput from "@/components/common/PasswordInput";
@@ -9,7 +8,6 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
-import { set } from "mongoose";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -72,7 +70,7 @@ export default function ForgotPasswordPage() {
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Forgot Password</h1>
 
           <p className="text-sm text-muted-foreground">
-            Enter your email address and we'll send you an OTP to reset your
+            Enter your email address and we&apos;ll send you an OTP to reset your
             password.
           </p>
         </CardHeader>

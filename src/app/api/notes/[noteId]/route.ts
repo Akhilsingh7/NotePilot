@@ -40,7 +40,7 @@ export async function GET(
     }
 
     return successResponse(note, "Note fetched successfully", 200);
-  } catch (error: any) {
+  } catch (error) {
     console.log("Error in getting particular note:", error);
 
     return errorResponse("Error in getting user note", 500);
@@ -49,7 +49,7 @@ export async function GET(
 
 export async function PUT(
   req: Request,
-  { params }: { params: { noteId: string } }
+  { params }: { params: Promise<{ noteId: string }> }
 ) {
   try {
     await dbConnect();
@@ -61,6 +61,10 @@ export async function PUT(
     }
 
     const { noteId } = await params;
+
+    if (!mongoose.Types.ObjectId.isValid(noteId)) {
+      return errorResponse("Invalid note id", 400);
+    }
 
     const body = await req.json();
 
@@ -79,7 +83,7 @@ export async function PUT(
     }
 
     return successResponse(updatedNote, "Note updated successfully", 200);
-  } catch (error: any) {
+  } catch (error) {
     console.log("Error in updating note:", error);
 
     return errorResponse("Something went wrong", 500);
@@ -88,7 +92,7 @@ export async function PUT(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { noteId: string } }
+  { params }: { params: Promise<{ noteId: string }> }
 ) {
   try {
     await dbConnect();
@@ -101,6 +105,10 @@ export async function DELETE(
 
     const { noteId } = await params;
 
+    if (!mongoose.Types.ObjectId.isValid(noteId)) {
+      return errorResponse("Invalid note id", 400);
+    }
+
     const deletedNote = await NotesModel.findOneAndDelete({
       _id: noteId,
       userId: session.user.id,
@@ -111,7 +119,7 @@ export async function DELETE(
     }
 
     return successResponse(deletedNote, "Note deleted successfully", 200);
-  } catch (error: any) {
+  } catch (error) {
     console.log("Error in deleting note:", error);
 
     return errorResponse("Error in deleting note", 500);

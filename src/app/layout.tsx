@@ -3,11 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
 import "./globals.css";
-import AuthProvider from "@/context/AuthProvider";
 import Navbar from "@/components/common/Navbar";
 
 import { Toaster } from "react-hot-toast";
-import Providers from "@/redux/providers/provider";
 import ClientProviders from "@/providers/ClientProviders";
 
 const geistSans = Geist({
