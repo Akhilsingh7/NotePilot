@@ -128,3 +128,8 @@
     @apply font-sans;
   }
 }
+@media (max-width: 540px) {
+  .bn-editor {
+    padding-inline: 14px !important;
+  }
+}

@@ -113,7 +113,7 @@ function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
 
   if (loading) {
     return (
-      <div className="flex min-h-[70vh] items-center justify-center">
+      <div className="flex w-screen  items-center justify-center">
         <Loader text="Loading note..." />
       </div>
     );
@@ -125,7 +125,7 @@ function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
 
   return (
     <AlertDialog>
-      <main className="mx-auto flex w-full min-w-0 max-w-4xl flex-col gap-2 gap-md-4 px-3 py-10 sm:px-6">
+      <main className="mx-auto flex w-full min-w-0 max-w-4xl flex-col gap-4 gap-md-6 px-3 py-6 sm:px-6 sm:py-10">
         {isOwner && (
           <div className="flex justify-end gap-2 mb-6">
             {isOwner && !isEditable && (
@@ -160,7 +160,7 @@ function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
         )}
 
         {!isEditable ? (
-          <h1 className="mb-6 break-words text-3xl font-serif font-bold sm:text-4xl md:text-5xl">
+          <h1 className="break-words text-3xl font-serif font-bold sm:text-4xl md:text-5xl">
             {title}
           </h1>
         ) : (
@@ -171,12 +171,12 @@ function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
           />
         )}
 
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-full bg-stone-300 flex items-center justify-center text-white font-semibold">
+        <div className="flex items-center gap-3">
+          <div className=" w-8 h-8 w-sm-10 h-sm-10 rounded-full bg-stone-300 flex items-center justify-center text-white font-semibold text-xs  text-sm-md">
             {note.authorName?.slice(0, 2).toUpperCase()}
           </div>
         </div>
-        <div className="min-w-0 border-t pt-8">
+        <div className="min-w-0 border-t">
           <NoteEditor editor={editor} editable={isEditable} />
         </div>
 

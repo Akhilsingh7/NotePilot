@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 function NoteCardSkeleton() {
   return (
-    <Card className="border-none shadow-none">
+    <Card className="border-none shadow-none w-[70vw]">
       <CardContent className="p-0 space-y-4">
         <Skeleton className="h-8 w-3/4" />
         <Skeleton className="h-4 w-full" />

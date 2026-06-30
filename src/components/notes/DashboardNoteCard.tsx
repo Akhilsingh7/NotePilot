@@ -11,7 +11,7 @@ export default function DashboardNoteCard({ note }: { note: Note }) {
 
   return (
     <Link key={note._id} href={`/notes/${note._id}`} className="block h-full">
-      <div className="h-full rounded-2xl border border-zinc-800 bg-zinc-900 p-4 md:p-5 transition hover:border-zinc-700">
+      <div className="h-full rounded-2xl border border-zinc-800 bg-zinc-900 p-4 md:p-5 transition hover:border-zinc-700 flex flex-col">
         <div className="mb-4 flex flex-wrap gap-2">
           {/* {note.pinned && (
           <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-700">
@@ -42,7 +42,7 @@ export default function DashboardNoteCard({ note }: { note: Note }) {
           {note.title}
         </h3>
 
-        <p className="mb-6 line-clamp-3 text-zinc-400">
+        <p className="mb-6 line-clamp-3 text-zinc-400  flex-1">
           {" "}
           {getPreviewText(note.content)}
         </p>
