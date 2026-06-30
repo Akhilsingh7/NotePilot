@@ -80,7 +80,7 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className=" w-full bg-black text-white">
       <div className="mx-auto max-w-7xl px-4 py-6 md:px-8">
         {/* Header */}
 

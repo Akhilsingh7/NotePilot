@@ -4,16 +4,14 @@ import type { NextRequest } from "next/server";
 
 export async function proxy(request: NextRequest) {
   const token = await getToken({ req: request });
-  const url = request.nextUrl;
+  const { pathname } = request.nextUrl;
 
   if (
-    token &&
-    (url.pathname.startsWith("/sign-in") || url.pathname.startsWith("/sign-up"))
+    !token &&
+    (pathname.startsWith("/dashboard") ||
+      pathname.startsWith("/write") ||
+      pathname.startsWith("/forgot-password"))
   ) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
-
-  if (!token && url.pathname.startsWith("/dashboard")) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
@@ -21,5 +19,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: ["/dashboard/:path*", "/write", "/forgot-password"],
 };

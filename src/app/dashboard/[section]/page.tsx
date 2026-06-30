@@ -40,7 +40,7 @@ export default function DashboardSectionPages({
   const notes = allNotes.filter(presentSection.filter);
 
   return (
-    <main className="min-h-screen bg-[#fdfdfc]">
+    <div className="w-full">
       <section className="border-b bg-[#f7f4ed]">
         <div className="max-w-6xl mx-auto px-6 py-10">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif leading-tight max-w-3xl">
@@ -59,6 +59,6 @@ export default function DashboardSectionPages({
           )}
         </div>
       </section>
-    </main>
+    </div>
   );
 }

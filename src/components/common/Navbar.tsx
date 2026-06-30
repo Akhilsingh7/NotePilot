@@ -21,7 +21,7 @@ export default function Navbar() {
 
   return (
     <header className="border-b bg-white relative">
-      <nav className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
+      <nav className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
         <Link href="/" className="text-3xl font-semibold">
           Notepilot
         </Link>

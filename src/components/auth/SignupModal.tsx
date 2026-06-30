@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import PasswordInput from "../common/PasswordInput";
 import { useSendOtp } from "./hooks/useSendOtp";
 import { useVerifyOtp } from "./hooks/useVerifyOtp";
+import { SigninModal } from "./SigninModal";
 
 type Props = {
   open: boolean;
@@ -28,7 +29,7 @@ export function SignupModal({ open, onOpenChange }: Props) {
   const [otp, setOtp] = useState("");
   const [password, setPassword] = useState("");
   const [isOtpVerified, setIsOtpVerified] = useState(false);
-
+  // const [openSignin, setOpenSignin] = useState(false);
   const { sendOtp, cooldown, sendLoading } = useSendOtp();
 
   const { verifyOtp, verifyLoading } = useVerifyOtp();
@@ -109,7 +110,13 @@ export function SignupModal({ open, onOpenChange }: Props) {
             </div>
 
             <div className="flex flex-col gap-2">
-              <Label>Email</Label>
+              <div>
+                <Label>Email</Label>
+                <p className="text-xs text-muted-foreground">
+                  ( Enter a valid email address )
+                </p>
+              </div>
+
               <Input
                 type="text"
                 placeholder="Enter your email"
@@ -152,7 +159,13 @@ export function SignupModal({ open, onOpenChange }: Props) {
             </Button>
 
             <div className="flex flex-col gap-2">
-              <Label>Password</Label>
+              <div>
+                <Label>Password</Label>
+                <p className="text-xs text-muted-foreground">
+                  ( Minimum 6 characters, one uppercase letter and one number )
+                </p>
+              </div>
+
               <PasswordInput
                 placeholder="Enter password"
                 value={password}
@@ -170,12 +183,13 @@ export function SignupModal({ open, onOpenChange }: Props) {
               Sign up
             </Button>
 
-            <p className="text-center text-sm text-gray-500">
+            {/* <p className="text-center text-sm text-gray-500">
               Already have an account? Sign in
-            </p>
+            </p> */}
           </div>
         </form>
       </DialogContent>
+      {/* <SigninModal open={openSignin} onOpenChange={setOpenSignin} /> */}
     </Dialog>
   );
 }

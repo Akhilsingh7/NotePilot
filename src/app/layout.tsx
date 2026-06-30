@@ -33,10 +33,12 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <ClientProviders>
-        <body className="min-h-full flex flex-col">
+      <body className="min-h-screen flex flex-col">
+        <ClientProviders>
           <Navbar />
-          {children}
+
+          <main className="flex flex-1">{children}</main>
+
           <Toaster
             position="bottom-right"
             toastOptions={{
@@ -47,8 +49,8 @@ export default function RootLayout({
               },
             }}
           />
-        </body>
-      </ClientProviders>
+        </ClientProviders>
+      </body>
     </html>
   );
 }

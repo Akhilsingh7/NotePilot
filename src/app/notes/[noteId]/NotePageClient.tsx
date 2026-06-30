@@ -25,6 +25,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Heart } from "lucide-react";
 
 function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
   const [note, setNote] = useState<Note | null>(null);
@@ -124,7 +125,7 @@ function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
 
   return (
     <AlertDialog>
-      <main className="mx-auto flex w-full min-w-0 max-w-4xl flex-col gap-2 px-3 py-10 sm:px-6">
+      <main className="mx-auto flex w-full min-w-0 max-w-4xl flex-col gap-2 gap-md-4 px-3 py-10 sm:px-6">
         {isOwner && (
           <div className="flex justify-end gap-2 mb-6">
             {isOwner && !isEditable && (
@@ -179,9 +180,17 @@ function NotePageClient({ params }: { params: Promise<{ noteId: string }> }) {
           <NoteEditor editor={editor} editable={isEditable} />
         </div>
 
-        <div className="flex items-center gap-4 mb-8 text-sm text-gray-500">
-          <span>❤️ {note.likesCount}</span>
-          <span>{note.isPublic ? "Public 🌍" : "Private 🔒"}</span>
+        <div className="mb-8 flex items-center gap-6 text-sm text-gray-500">
+          <div className="flex items-center gap-1.5">
+            <Heart className="h-4 w-4 text-black" />
+            <span>{note.likesCount}</span>
+          </div>
+
+          {session && (
+            <div className="flex items-center">
+              <span>{note.isPublic ? "🌍 Public" : "🔒 Private"}</span>
+            </div>
+          )}
         </div>
 
         {isEditable && (

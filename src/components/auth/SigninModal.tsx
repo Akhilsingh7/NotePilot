@@ -18,6 +18,7 @@ import toast from "react-hot-toast";
 import { Loader } from "../ui/loader";
 import PasswordInput from "../common/PasswordInput";
 import Link from "next/link";
+import { SignupModal } from "./SignupModal";
 
 type Props = {
   open: boolean;
@@ -29,6 +30,7 @@ export function SigninModal({ open, onOpenChange }: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [openSignup, setOpenSignup] = useState(false);
 
   const signInUser = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -107,12 +109,7 @@ export function SigninModal({ open, onOpenChange }: Props) {
               />
             </div>
 
-            <div className="flex justify-between text-sm">
-              <div className="flex items-center gap-2 ">
-                <Checkbox />
-                <span>Remember me</span>
-              </div>
-
+            <div className="flex justify-end text-sm">
               <Link
                 href={"/forgot-password"}
                 className="text-primary hover:underline"
@@ -125,19 +122,30 @@ export function SigninModal({ open, onOpenChange }: Props) {
             <Button type="submit" className="w-full " disabled={loading}>
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
-                  <Loader text="Signing in..." direction="row" />
+                  <Loader
+                    text="Signing in..."
+                    direction="row"
+                    className="text-white"
+                  />
                 </span>
               ) : (
                 "Sign in"
               )}
             </Button>
 
-            <p className="text-center text-sm text-gray-500">
+            <div
+              onClick={() => {
+                onOpenChange(false);
+                setOpenSignup(true);
+              }}
+              className="text-center text-sm text-gray-500 hover:underline cursor-pointer"
+            >
               No account? Create one
-            </p>
+            </div>
           </div>
         </form>
       </DialogContent>
+      <SignupModal open={openSignup} onOpenChange={setOpenSignup} />
     </Dialog>
   );
 }

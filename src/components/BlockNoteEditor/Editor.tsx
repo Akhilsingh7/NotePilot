@@ -23,8 +23,13 @@ export default function BlockEditor() {
         toast.error("Title is required");
         return;
       }
+      console.log("edd", editor.document);
+      console.log("edd-length", editor.document.length);
+      const hasContent = editor.document.some((block) => {
+        return block.content.length > 0 || block.children.length > 0;
+      });
 
-      if (!editor.document.length) {
+      if (!hasContent) {
         toast.error("Content is empty");
         return;
       }

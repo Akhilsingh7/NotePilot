@@ -5,6 +5,7 @@ import { Heart } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useNoteActions } from "./useNoteAction";
+import toast from "react-hot-toast";
 
 type NoteCardProps = {
   note: Note;
@@ -16,6 +17,17 @@ function ExploreNoteCard({ note }: NoteCardProps) {
   const likedNoteIds = useAppSelector((state) => state.likes.likedNoteIds);
 
   const { toggleLike } = useNoteActions();
+  const handleLikeClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!session) {
+      toast.error("Login to Like");
+      return;
+    }
+
+    toggleLike(note._id);
+  };
 
   return (
     <Link key={note._id} href={`/notes/${note._id}`}>
@@ -43,19 +55,17 @@ function ExploreNoteCard({ note }: NoteCardProps) {
                 })}
               </span>
 
-              <span>•</span>
-
-              <span>{note.isPublic ? "Public" : "Private"}</span>
+              {session && (
+                <>
+                  <span>•</span>{" "}
+                  <span>{note.isPublic ? "Public" : "Private"}</span>{" "}
+                </>
+              )}
             </div>
 
             <button
               className="flex items-center gap-1 text-gray-500 transition-colors "
-              disabled={!session}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                toggleLike(note._id);
-              }}
+              onClick={handleLikeClick}
             >
               <Heart
                 className={`h-4 w-4 transition-all ${
